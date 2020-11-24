@@ -13,7 +13,7 @@ function tick() {
     <div>
       <h1>Hello, world!</h1>
       <h2>It is {new Date().toLocaleTimeString()}.</h2>
-      <p>Generated from Cut and Paste React at $CPR_DATE.
+      <p>Generated from Cut and Paste React at $CPR_DATE. </p>
     </div>
   );  
   ReactDOM.render(
