@@ -1,0 +1,98 @@
+<html>
+<head>
+<style>
+body{
+  font-family:courier;
+  line-height:140%;
+  margin-left:4rem;
+}
+h1{ 
+  margin-left:-1rem;
+  margin-top:1rem;
+}
+
+.img-container{
+max-width:60%; 
+float:left;
+text-align:center;
+margin-bottom:2rem;
+font-style:italic;
+}
+
+pre{
+  margin-left:2rem;
+ 
+}
+#exampleDiv{
+  width: 10rem;
+  height: 4rem;
+  margin-left:8rem;
+  padding-top:2rem;
+  text-align:center;
+  font-weight:bold;
+  background:#333;
+}
+.cli{
+  white-space: pre;
+  font-family:monospace;
+  margin:0; 
+  margin-top:-2em;
+}
+</style>
+</head>
+<body>
+<h1>Websocket color example</h1>
+
+<h2>On commandline server</h2>
+<ul>
+<li>Run server code:<br> <tt>websocketd 
+	--staticdir=. --port=9200 ./color.sh</tt></li>
+<li>load this <a href="./color.html">color.html</a>
+<li>View color:</li>
+</ul>
+
+<div id="exampleDiv">exampleDiv</div>
+
+<h3>color.sh</h3>
+<div class="cli">
+#!/bin/bash
+while true; do
+  while read line; do
+    echo 
+    sleep 0.75
+  done &lt;./color.json
+done
+</div>
+
+<h3>color.json</h3>
+{"id":"exampleDiv","key":"backgroundColor","value":"#888"}
+{"id":"exampleDiv","key":"color","value":"#800"}
+{"id":"exampleDiv","key":"backgroundColor","value":"#088"}
+{"id":"exampleDiv","key":"color","value":"#080"}
+{"id":"exampleDiv","key":"backgroundColor","value":"#808"}
+{"id":"exampleDiv","key":"color","value":"#008"}
+{"id":"exampleDiv","key":"backgroundColor","value":"#800"}
+{"id":"exampleDiv","key":"color","value":"#880"}
+{"id":"exampleDiv","key":"backgroundColor","value":"#008"}
+{"id":"exampleDiv","key":"color","value":"#808"}
+{"id":"exampleDiv","key":"backgroundColor","value":"#080"}
+{"id":"exampleDiv","key":"color","value":"#088"}
+{"id":"exampleDiv","key":"backgroundColor","value":"#800"}
+
+<script src="./csspubsub.js"></script>
+<script>
+var ws = new WebSocket('ws://localhost:9200/');
+ws.onmessage = function(event) {
+  console.log('event.data: ' + event.data);
+  json=JSON.parse(event.data);
+
+  if(json.key==="color"){
+    document.getElementById(json.id).style.color=json.value;
+  }
+  if(json.key==="backgroundColor"){
+    document.getElementById(json.id).style.backgroundColor=json.value;
+  }
+};
+</script>
+</body>
+</html>

@@ -17,15 +17,14 @@ pre{
 </style>
 </head>
 <body>
-<h1>Websocket Test</h1>
-
-<ul>
-<li>Run server code: <tt>websocketd --port=9200 ./count.sh</tt></li>
-<li>load this count.html file either by file:// or http://</tt></li>
-<li>view console outout</li>
-</ul>
+<h1>Websocket example: count.html</h1>
 
 <h2>Server side program</h2>
+<p>
+<b>websocketd</b> serves both HTML via <tt>staticdir</tt>
+and arbitrary real-time data via <tt>ws://</tt> protocol,
+both on the same port.
+</p>
 <pre><code>
 count.sh 
 #!/bin/bash
@@ -35,6 +34,15 @@ for ((COUNT = 1; COUNT <= 10; COUNT++)); do
     sleep 0.5
     done
 </code></pre>
+
+<h2> Client side </h2>
+<ul>
+<li>Run server code: 
+	<tt>websocketd --staticdir. --port=9200 ./count.sh</tt></li>
+<li>load <a href="./count.html">count.html</a>
+	file either by file:// or http://</tt></li>
+<li>view console outout</li>
+</ul>
 
 <h2>Screenshots</h2>
 <div class="img-container">
