@@ -7,17 +7,20 @@ body{
   padding:1rem 20% 0 2rem;
   font-size:18pt;
   font-family:courier;
-  line-height:140%;
+  line-height:150%;
   position:static;
 }
 h2{
 margin-left:.5em;
 }
+.caption{
+  font-style:italic;
+}
 p {
   margin:2em;
 }
-pre, ol{
-  margin-left:3em;
+pre, ol, ul{
+  margin-left:2em;
 }
 a{
   font-weight:bold;
@@ -60,27 +63,19 @@ font on a webpage they are editing. To do this, they add:
 &lt;/script&gt;
 </pre>
 <p>
-This will generate link at the bottom of the page that 
-takes you the joystick server app using a key in the URL.
+This will generate a public session key and a link to the 
+joystick server app:
 </p>
 <pre>https://joystick.study-groups.org?csskey="freshHash"
 </pre> 
 <p>
 The joystick app page will present a sqaure element that tracks the 
-thumb and sends to the server.
+thumb and sends data to the server in real time via websocket 
+secured with TLS.
 </p>
 <p>
-Server sends update to all pages that are subscribed via 
-<b>WebSocket</b>.
-<b>cssPubSub.onEvent()</b> dispatches to right 
-<b>handleCssEvent()</b> defined by user to change css value in real time.
-</p>
-
-<h2>Sketches</h2>
-<p>
-<div style="width:60%">
+<div style="margin:auto; width:60%">
   <div style="width:40%">
-    <div>
 <svg viewBox="100 120 400 400"  xmlns="http://www.w3.org/2000/svg" 
 xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -161,9 +156,17 @@ d="M183.193 253.701 l-0.496 -1.672 -0.038 -0.326 -2.595 1.761 0.639 0.743 0.7 0.
 
 </svg>
 </div>
-  </div>
-  Thumb control data sent to server and published to cssPubSub listeners
+<div class="caption">
+Thumb control data sent to server and published to cssPubSub listeners
 </div>
+</div>
+<p>
+Server sends update to all pages that are subscribed via 
+<b>WebSocket</b>.
+<b>cssPubSub.onEvent()</b> dispatches to right 
+<b>handleCssEvent()</b> defined by user to change css value in real time.
+</p>
+
 
 </p>
 
@@ -208,7 +211,12 @@ d="M183.193 253.701 l-0.496 -1.672 -0.038 -0.326 -2.595 1.761 0.639 0.743 0.7 0.
         <a href="https://github.com/robinpokorny/dead-simple">
             Good, simple implementation of PubSub</a>
     </li>
-</ul>
+    <li>
+        <a href="https://tls.ulfheim.net/">
+            The Illustrated TLS Connection</a>
+    </li>
+
+    </ul>
 </p>
 </div>
 </body>
