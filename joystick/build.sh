@@ -16,4 +16,3 @@ webtool-build-joystick(){
   # sketch_component and heart_component).
   cat index.html.env | envsubst > index.html
 }
-
