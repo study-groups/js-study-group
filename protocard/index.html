@@ -1,12 +1,3 @@
-# To use copy-paste-react:
-# source cpr.sh
-# cpr-make-example Saturn > index.html
-# copy contents of index.html in paste buffer
-# paste into the URL bar of browser
-cpr-make-example(){
-  local name=${1:-"world"}
-  local date=$(date) # could be Compenents
-  cat <<EOF
 <!-- Copy and paste into your URL of browser: -->
 
 data:text/html,
@@ -32,9 +23,9 @@ state-and-lifecycle @ react.js
 function tick() {
   let element = (
     <div>
-      <h1>Hello, $name!</h1>
+      <h1>Hello, Saturn!</h1>
       <h2>It is {new Date().toLocaleTimeString()}.</h2>
-      <p>Generated at $date. </p>
+      <p>Generated at Fri Dec 11 22:34:23 PST 2020. </p>
     </div>
   );  
   ReactDOM.render(
@@ -45,5 +36,3 @@ function tick() {
 setInterval(tick, 1000);
 </script>
 </html>
-EOF
-}
