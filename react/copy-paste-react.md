@@ -1,6 +1,8 @@
-# Serveless React
+# Single File App
 
-## Background
+A "single file app" is a self-contained, text encoded buffer that, when pasted into a browser's address URL bar, will render a responsive HTML/JS/CSS application.
+
+## Serverless React
 To run React code without a server, you need to include three packages via a content delivery network:
 1. React library
 2. React-Dom library
