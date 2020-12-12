@@ -36,9 +36,10 @@ distributed logs in real time. It takes its name from
   - /var/log/messages
   - /var/log/syslog
 
-- In **Vercel**, query serverless functions
-  -
-  - https://logdna.com/
+- In **Vercel**, query:
+  - [serverless-functions](https://vercel.com/docs/serverless-functions/introduction)
+  - [log-drain](https://vercel.com/integrations/sematext-log-drain)
+  - [logdna](https://logdna.com/)
 
 ### Future
 - Prototype log parser for future log transformer
