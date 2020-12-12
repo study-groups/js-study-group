@@ -1,21 +1,22 @@
-<style>
-.code-title{
-  text-align:center;
-  font-weight:bold;
-  margin-bottom:1em;
-  margin-top:0em;
-  padding-top:0em;
-}
-</style>
+# Copy and Paste React
 
-# React without a Server (copy-paste-react)
+## Single File App
 
+Let's say a **single file app** is a self-contained, text encoded buffer that, when pasted into a browser's address URL bar, will render a responsive HTML/JS/CSS application.
+
+## Serverless React
 To run React code without a server, you need to include three packages via a content delivery network:
 1. React library
 2. React-Dom library
 3. Babel library
 
-In addition, your browser must some way load the React code. To cut and paste code, you may change the protocol from HTTP to raw data. By adding the following to your code: `data:text/html,` You can cut-n-paste a single file into your browser bar and be running React with any hosting server.
+In addition, your browser must some way load the React code. To cut and paste code directly into your browser's URL bar, you may change the protocol from HTTP to [**raw data**]( 
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+).
+
+By adding the following to your code: `data:text/html,`You can copy-and-paste a single file into your browser bar run React without any form of HTTP server.
+
+## copy-paste-react
 
 Copy and paste this code into your browser's URL input:
 
@@ -44,9 +45,6 @@ setInterval(tick, 1000);
 </script>
 </html>
 ```
-<div class="code-title">
-React without server
-</div>
 
 # Analysis
 ## Babel
@@ -75,13 +73,11 @@ function tick() {
 }
 setInterval(tick, 1000);
 ```
-<div class="code-title">
-tick() function with JSX
-</div>
 
 To this:
 
 ```javascript
+//tick() function after Babel.
 "'use strict';
 
 function tick() {
@@ -104,12 +100,7 @@ function tick() {
   ReactDOM.render(element, document.getElementById('root'));
 }
 setInterval(tick, 1000);"
-
 ```
-<div class="code-title">
-tick() function after Babel.
-</div>
-
 
 
 ## DOM element traversal
@@ -120,13 +111,11 @@ Like any React app, this one is grabbing `<div id='root'>`and modifying it and i
 Recall JS API to DOM:
 
 ``` javascript
+//Topmost DOM elements
 document.children[0]  // HTML element wit both head and body
 document.children[0].children[0]  // same as document.head
 document.children[0].children[1]  // same as document.body
 ```
-<div class="code-title">
-Topmost DOM elements
-</div>
 
 The DOM element `id ='root'` is found at the top of the DOM tree because we put a `<div id='root'></div>` in the original HTML. 
 ```
