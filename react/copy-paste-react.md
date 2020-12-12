@@ -1,6 +1,8 @@
-# Single File App
+# Copy and Paste React
 
-A "single file app" is a self-contained, text encoded buffer that, when pasted into a browser's address URL bar, will render a responsive HTML/JS/CSS application.
+## Single File App
+
+Let's say a **single file app** is a self-contained, text encoded buffer that, when pasted into a browser's address URL bar, will render a responsive HTML/JS/CSS application.
 
 ## Serverless React
 To run React code without a server, you need to include three packages via a content delivery network:
@@ -12,7 +14,7 @@ In addition, your browser must some way load the React code. To cut and paste co
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
 ).
 
-By adding the following to your code: `data:text/html,`You can cut-n-paste a single file into your browser bar run React without a hosting server.
+By adding the following to your code: `data:text/html,`You can copy-and-paste a single file into your browser bar run React without any form of HTTP server.
 
 ## copy-paste-react
 
