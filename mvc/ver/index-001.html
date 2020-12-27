@@ -1,0 +1,22 @@
+<textarea id="in"
+onchange='
+  s={};
+  d=document;
+  d.g=getElementById;
+  function uV(kvs){
+    d.g("li").innerText=JSON.stringify(kvs);
+  }
+  function uM(k,v){
+    gKvs[k]=v; uV(gKvs);
+  }
+  function biz(v){
+    kv=v.split("="); 
+    return kv;
+  } 
+  kv=biz(d.g("in").value);
+  uM(kv[0],kv[1]);'
+></textarea>
+<li id="li">try k=3 or m=3</li>
+<script>
+gKvs={};
+</script>

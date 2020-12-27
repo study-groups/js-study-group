@@ -1,0 +1,37 @@
+<input id="in"
+onchange='
+  d=document;
+  d.g=getElementById;
+  kv=biz(d.g("in").value);
+  uM(kv[0],kv[1]);
+
+  function biz(v){
+    kv=v.split("="); 
+    return kv;
+  }
+  function uM(k,v){
+    gKvs[k]=v;
+    uV(gKvs);
+  }
+  function uV(kvs){
+    d.g("li").innerText=JSON.stringify(kvs);
+  }
+'></input>
+ 
+<li id="li">try k=3 or m=3</li>
+<textarea id="code" style="height:80%; width:40em;"
+onchange='
+  code=document.getElementById("code").value;
+  localStorage.setItem("code",code);
+  document.getElementsByTagName("html")[0].innerHTML=code;
+  document.getElementById("code").value=code;
+
+'>paste code here, tab to execute
+</textarea>
+
+<script> 
+gKvs={};
+document.getElementById("code").innerHTML=
+  document.getElementsByTagName("html")[0].innerHTML;
+
+</script>

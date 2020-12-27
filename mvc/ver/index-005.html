@@ -1,0 +1,27 @@
+<head></head><body>
+<input id="in" onchange='
+  d=document;
+  d.g=getElementById;
+  kv=biz(d.g("in").value);
+  uM(kv[0],kv[1]);
+  function biz(v){
+    kv=v.split("="); 
+    return kv;
+  }
+  function uM(k,v){
+    gKvs[k]=v;
+    uV(gKvs);
+  }
+  function uV(kvs){
+    d.g("li").innerText=JSON.stringify(kvs);
+  }
+'>
+<li id="li">try k=3 or m=3</li>
+
+<script src="./editor.js"></script>
+<script>
+gKvs={};  //used in update model function uM(kvs)
+document.getElementsByTagName("html")[0].innerHTML+=
+createEditorComponent("Code goes here");
+</script>
+</body>

@@ -1,0 +1,120 @@
+<!-- Converts to editor component. -->
+<html>
+<head></head><body>
+<div id="root"> </div>
+<div id="editor"></div>
+
+<script>
+function createInputElement(){
+return `<input id="in" onchange=' <!-- change to single quote -->
+  gKvs={}; // needs to be in global to avoid reset
+  d=document;
+  d.g=getElementById;
+
+  kv=biz(d.g("in").value);
+  uM(kv[0],kv[1]);
+
+  function biz(v){
+    kv=v.split("="); 
+    return kv;
+  }
+  function uM(k,v){
+    gKvs[k]=v;
+    uV(gKvs);
+  }
+  function uV(kvs){
+    d.g("li").innerText=JSON.stringify(kvs);
+  }
+'>
+</div>
+`;
+}
+
+function createButtonElement(pre,post){
+    html=`<button>update</button>`;
+   return html;
+}
+function createListItemElement(html="",pre="",post=""){
+	return `${pre}<li id="li">${html}</li>${post}`
+}
+
+function Render(id,element){
+  document.getElementById(id).innerHTML=
+	       createInputElement()+createButtonElement()+
+		createListItemElement("try m=3");	
+}
+Render("root","");
+      
+</script>
+
+<!-- Editor component. Components are View/Controller, no Model. -->
+<script> 
+// Brutal interface, creates HTML 
+function createEditorComponent(code,handler){
+  return makeHtmlEditor(code, handler);
+}
+
+// View code
+function makeHtmlEditor(code,handler){
+  html=`
+    <div id="editor">
+    <div id="code-status">idle</div>
+    <textarea id="code" 
+      style="height:30rem; width:35rem; font-size:13pt;" 
+      onchange="${handler.name}(this)">
+      ${code}
+    </textarea>
+    </div>
+`;
+  return html;
+}
+
+// Controller code
+function handleEditorChange(evt){
+    document.getElementById("code-status").innerText=`${evt}`;
+}
+</script>
+
+
+<!-- INITIALIZE -->
+<script>
+function handleCustomEditorChange(evt){
+   document.getElementById("code-status").innerText=`New Custom.`;
+   document.getElementById("root").innerHTML=
+   document.getElementById("code").value; 
+   handleEditorChange(evt);
+}
+
+// React.createElement(component-type,props,children) where:
+//
+//       1) component-type is div, p or CustomClass, Editor
+//       2) props is properties
+//       3) children are passed down to us so we can render under us
+//
+//
+// RenderDOM.render(element,container,callback) where: 
+//
+//       1) element is the result of createElement()
+//       2) container is the parent to add to 
+//       3) callback is optional and called after update
+
+// For this example, have the component type in the name so 
+// function signature is createTypeofElement(props, children).
+// 
+// The text from the root element we are editing is the 
+// only property.
+//
+// the new EditorComponent should be passed to the analog of 
+// ReactDOM.render(element, container, callback).
+
+// Budget ReactDOM.render() function. Instead of writing a
+// render function and passing the topmost DOM element,
+// grap the top-most "editor" element and set it equal
+// to a newly created HTML string representing the component
+// and it's preset onchange handler.
+document.getElementById("editor").innerHTML=
+  createEditorComponent(document.getElementById("root").innerHTML,
+                        handleCustomEditorChange);
+</script>
+</body>
+<html>

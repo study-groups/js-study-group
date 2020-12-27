@@ -1,0 +1,103 @@
+<h1 id="single-buffer-app">Single Buffer App</h1>
+<h2 id="about">About</h2>
+<p>A single buffer app contains the entire app in one contiguous buffer. This file shows the progression of a model-view-controller framework for vanilla JavaScript. This example begins by defining a stateless controller-view pair using onchange as the controller and li as a view element.</p>
+<p>Each line can be cut and paste into the URL of browser using <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs">data URLs</a>.</p>
+<pre><code>data:text/html, &lt;html&gt;&lt;input&gt;&lt;/input&gt;&lt;li&gt;idle&lt;/li&gt;&lt;/html&gt;
+
+data:text/html, &lt;html&gt;&lt;input onchange=&#39;document.getElementById(&quot;li&quot;).innerText=document.getElementById(&quot;in&quot;);&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;&lt;/html&gt;
+
+data:text/html, &lt;html&gt;&lt;input id=&quot;in&quot; onchange=&#39;document.getElementById(&quot;li&quot;).innerText=document.getElementById(&quot;in&quot;);&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;&lt;/html&gt;
+
+data:text/html, &lt;html&gt;&lt;input id=&quot;in&quot; onchange=&#39;d=document; d.g=getElementById; d.g(&quot;li&quot;).innerText=d.g(&quot;in&quot;);&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;&lt;/html&gt;
+
+data:text/html,&lt;input id=&quot;in&quot; onchange=&#39;d=document; d.g=getElementById; d.g(&quot;li&quot;).innerText=d.g(&quot;in&quot;);&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;
+
+data:text/html,&lt;input id=&quot;in&quot; onchange=&#39;d=document; d.g=getElementById; d.g(&quot;li&quot;).innerText=d.g(&quot;in&quot;).value;&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;
+
+// Begining MVC where uV(p) is short for updateView(props)
+data:text/html,&lt;input id=&quot;in&quot; onchange=&#39;d=document; function uV(p){d.g=getElementById; d.g(&quot;li&quot;).innerText=d.g(&quot;in&quot;).value;} uV();&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;
+
+// Passing prop to view
+data:text/html,&lt;input id=&quot;in&quot; onchange=&#39;d=document; d.g=getElementById; function uV(p){ d.g(&quot;li&quot;).innerText=p;} uV(d.g(&quot;in&quot;).value);&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;
+
+// Add business logic in model. Could do this in handler/controller
+data:text/html, &lt;input id=&quot;in&quot; onchange=&#39;d=document; d.g=getElementById;function uV(p){ d.g(&quot;li&quot;).innerText=p;} function uM(v){ biz(v); uV(v);} function biz(v){return v;} v=biz(d.g(&quot;in&quot;).value); uM(v);&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;
+
+// biz in controller before model update:
+data:text/html, &lt;input id=&quot;in&quot; onchange=&#39;d=document; d.g=getElementById;function uV(p){ d.g(&quot;li&quot;).innerText=p;} function uM(v){uV(v);} function biz(v){return v;} v=biz(d.g(&quot;in&quot;).value); uM(biz(v));&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;
+
+// baby step adding model state, view updates with ojbect ref
+data:text/html, &lt;input id=&quot;in&quot; onchange=&#39;m={}; d=document; d.g=getElementById;function uV(p){ d.g(&quot;li&quot;).innerText=p;} function uM(v){uV(v);} function biz(v){m.m=v; return m;} v=biz(d.g(&quot;in&quot;).value); uM(biz(v));&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;
+
+// biz(v): val = businessLogic(value)
+// uM(v):  updateModel(val), assume s.m=val, calls updateView(s)
+// uV(str):  updateView(str) 
+data:text/html, &lt;input id=&quot;in&quot; onchange=&#39;s={}; d=document; d.g=getElementById;function uV(str){ d.g(&quot;li&quot;).innerText=str;} function uM(v){s.m=v; uV(v);} function biz(v){return v.toLowerCase();} str=biz(d.g(&quot;in&quot;).value); uM(str);&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;
+
+
+// biz(v): kv = business-logic(value); returns keyval array of 2 elements
+// uM(kv): updateModel(kv), stores in global gKv
+// uV(kv):  updateView(kv), state gets passed as props
+data:text/html, &lt;input id=&quot;in&quot; onchange=&#39;s={}; d=document; d.g=getElementById;function uV(kv){ d.g(&quot;li&quot;).innerText=kv[1];} function uM(kv){gKv=kv; uV(kv);} function biz(v){kv=v.split(&quot;=&quot;); return kv;} kv=biz(d.g(&quot;in&quot;).value);gKv=[&quot;m&quot;,3]; uM(kv);&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;idle&lt;/li&gt;
+
+
+// biz(v): kv = business-logic(kv_str), if invalid, return gKv
+// uM(kv): updateModel(kv), stores in global gKv
+// uV(kv):  updateView(kv), state gets passed as props
+data:text/html, &lt;input id=&quot;in&quot; onchange=&#39;s={}; d=document; d.g=getElementById;function uV(kv){ d.g(&quot;li&quot;).innerText=kv[1];} function uM(kv){gKv=kv; uV(kv);} function biz(v){kv=v.split(&quot;=&quot;); return (kv[1] ? kv : gKv);} kv=biz(d.g(&quot;in&quot;).value);gKv=[&quot;m&quot;,3]; uM(kv);&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;try k=3&lt;/li&gt;
+
+
+// change uM(kv) to uM(k,v)
+data:text/html, &lt;input id=&quot;in&quot; onchange=&#39;s={}; d=document; d.g=getElementById;function uV(kvs){ d.g(&quot;li&quot;).innerText=JSON.stringify(kvs);} function uM(k,v){gKvs[k]=v; uV(gKvs);} function biz(v){kv=v.split(&quot;=&quot;); return kv;} gKvs={}; kv=biz(d.g(&quot;in&quot;).value); uM(kv[0],kv[1]);&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;try k=3 or m=3&lt;/li&gt;
+
+
+// moved model out of controller (all code is in input handler!) 
+data:text/html, &lt;input id=&quot;in&quot; onchange=&#39;s={}; d=document; d.g=getElementById;function uV(kvs){ d.g(&quot;li&quot;).innerText=JSON.stringify(kvs);} function uM(k,v){gKvs[k]=v; uV(gKvs);} function biz(v){kv=v.split(&quot;=&quot;); return kv;} kv=biz(d.g(&quot;in&quot;).value); uM(kv[0],kv[1]);&#39;&gt;&lt;/input&gt;&lt;li id=&quot;li&quot;&gt;try k=3 or m=3&lt;/li&gt;&lt;script&gt;gKvs={};&lt;/script&gt;
+
+// change input to textarea
+data:text/html, &lt;textarea id=&quot;in&quot; onchange=&#39;s={}; d=document; d.g=getElementById;function uV(kvs){ d.g(&quot;li&quot;).innerText=JSON.stringify(kvs);} function uM(k,v){gKvs[k]=v; uV(gKvs);} function biz(v){kv=v.split(&quot;=&quot;); return kv;} kv=biz(d.g(&quot;in&quot;).value); uM(kv[0],kv[1]);&#39;&gt;&lt;/textarea&gt;&lt;li id=&quot;li&quot;&gt;try k=3 or m=3&lt;/li&gt;&lt;script&gt;gKvs={};&lt;/script&gt;
+</code></pre>
+<h2 id="expanded-single-line-mvc">Expanded single line MVC</h2>
+<ol type="1">
+<li>VIEW: <code>&lt;li&gt;</code>, <code>updateView()</code></li>
+<li>CONTROLLER: <code>in.onchange()</code> <code>businessLogic()</code></li>
+<li>MODEL: <code>globalKeyValuesObject</code> <code>updateModel()</code></li>
+</ol>
+<pre><code>data:text/html,
+&lt;textarea id=&quot;in&quot;
+onchange=&#39;
+  s={};
+  d=document;
+  d.g=getElementById;
+  function uV(kvs){
+    d.g(&quot;li&quot;).innerText=JSON.stringify(kvs);
+  }
+  function uM(k,v){
+    gKvs[k]=v; uV(gKvs);
+  }
+  function biz(v){
+    kv=v.split(&quot;=&quot;); 
+    return kv;
+  } 
+  kv=biz(d.g(&quot;in&quot;).value);
+  uM(kv[0],kv[1]);&#39;
+&gt;&lt;/textarea&gt;
+&lt;li id=&quot;li&quot;&gt;try k=3 or m=3&lt;/li&gt;
+&lt;script&gt;
+gKvs={};
+&lt;/script&gt;</code></pre>
+<h2 id="mvc-with-simple-graphing-matrix">MVC with simple graphing matrix</h2>
+<ul>
+<li><a href="./ver/index-001.html">001</a></li>
+<li><a href="./ver/index-002.html">002</a></li>
+<li><a href="./ver/index-003.html">003</a></li>
+<li><a href="./ver/index-004.html">004</a></li>
+<li><a href="./ver/index-005.html">005</a></li>
+<li><a href="./ver/index-006.html">006</a></li>
+<li><a href="./ver/index-007.html">007</a></li>
+<li><a href="./ver/index-008.html">008</a> (markserv chokes on this)</li>
+<li><a href="./ver/index-009.html">009</a></li>
+<li><a href="./ver/index-010.html">010</a></li>
+<li><a href="./ver/index-011.html">011</a></li>
+<li><a href="./ver/index-012.html">012</a></li>
+</ul>

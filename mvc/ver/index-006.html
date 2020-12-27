@@ -1,0 +1,63 @@
+<!-- Adds html tag and pulls in editor.js code -->
+<html>
+<head></head><body>
+<div id="content">
+<input id="in" onchange='
+  d=document;
+  d.g=getElementById;
+  kv=biz(d.g("in").value);
+  uM(kv[0],kv[1]);
+  function biz(v){
+    kv=v.split("="); 
+    return kv;
+  }
+  function uM(k,v){
+    gKvs[k]=v;
+    uV(gKvs);
+  }
+  function uV(kvs){
+    d.g("li").innerText=JSON.stringify(kvs);
+  }
+'>
+<li id="li">try k=3 or m=3</li>
+</div>
+
+
+<script> <!-- Editor component. Components are View/Controller, no Model. -->
+// Brutal interface, creates HTML 
+function createEditorComponent(code="enter code",handleChange="handleChange"){
+  return makeHtmlEditor(code, handleChange);
+}
+
+// View code
+function makeHtmlEditor(codeText="paste code here",handleChange){
+  return `
+    <div id="code-status">idle</div>
+    <textarea id="code" 
+      style="height:40rem; width:40rem; font-size:13pt;" 
+      onchange="handleChange(this)">
+      ${codeText}
+    </textarea>
+`;
+}
+
+// Controller code
+function handleChange(evt){
+    document.getElementById("code-status").innerText=`Got event ${evt}.`;
+
+    // This is too tightly coupled - component should not know about 
+    // content explicitly. Should pass parent to createComponent
+    document.getElementById("content").innerHTML=
+      document.getElementById("code").value; 
+}
+</script>
+
+<!-- INITIALIZE -->
+<script>
+gKvs={};  //used in update model function uM(kvs)
+document.getElementsByTagName("html")[0].innerHTML+=
+createEditorComponent(document.getElementById("content").innerHTML);
+</script>
+
+</body>
+<html>

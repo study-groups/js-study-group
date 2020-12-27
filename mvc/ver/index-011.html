@@ -1,0 +1,236 @@
+<!-- Creates global variable for sharing key/vals. -->
+<html>
+<head></head><body>
+<div id="root"> </div>
+<div id="editor"></div>
+<div id="grid"></div>
+
+<script>
+function createInputElement(){
+return `<input id="in" onchange=' 
+  d=document;
+  d.g=getElementById;
+
+  kv=biz(d.g("in").value);
+  uM(kv[0],kv[1]);
+
+  function biz(v){
+    kv=v.split("="); 
+    return kv;
+  }
+  function uM(k,v){
+    gKvs[k]=v;
+    uV(gKvs);
+  }
+  function uV(kvs){
+    d.g("li").innerText=JSON.stringify(kvs);
+  }
+'>
+</div>
+`;
+}
+
+function createButtonElement(pre,post){
+    html=`<button onclick='handleButtonClick(this);'>update</button>`;
+   return html;
+}
+
+function handleButtonClick(evt){
+   grid=document.getElementById("grid").innerHTML="Calculating...";
+   setTimeout( () => { 
+	   createGridElement("grid",gKvs["rows"],gKvs["cols"]) }, 
+	   100);
+}
+
+function createListItemElement(html="",pre="",post=""){
+	return `${pre}<li id="li">${html}</li>${post}`
+}
+
+function render(rootId){
+  document.getElementById(rootId).innerHTML=
+      createInputElement()+
+      createButtonElement()+
+      createListItemElement("try m=3");	
+}
+
+render("root"); // Does not include grid or editor
+
+function createGridCss(){
+  return `
+:root {
+  --grid-cols: 1;
+  --grid-rows: 1;
+}
+
+#grid {
+
+  float:left; 
+  width:15rem; 
+  height:15rem; 
+  margin:2rem;
+  border:1px 
+  solid red;
+
+  display: grid;
+  grid-template-rows: repeat(var(--grid-rows), 1fr);
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+}
+
+.grid-item {
+  border: 1px solid #ddd;
+  margin:0;
+  padding:0;
+  text-align: center;
+  border-radius:50%;
+}
+  `;
+}
+
+function createGridElement(id,rows,cols){
+  container = document.getElementById(id);
+  container.textContent="";
+  container.style.setProperty('--grid-rows', rows);
+  container.style.setProperty('--grid-cols', cols);
+  for (c = 0; c < (rows * cols); c++) {
+    let cell = document.createElement("div");
+    //cell.innerText = (c + 1);
+    container.appendChild(cell).className = "grid-item";
+  };
+
+  plotline(gKvs.m,gKvs.b);
+
+
+}
+
+function createGridElementIntro(rows,cols){
+	return `<a href="https://stackoverflow.com/questions/57550082/creating-a-16x16-grid-using-javascript"> Css Grid Example on Stack Overflow.</a>`
+}
+
+/*
+  y = m * x + b
+
+  We want x and y to range from [-.5, .5]
+  We want r and c to range from [0, rows] and [0, cols]
+*/
+function plotline(m,b){
+  const cols=gKvs["cols"];
+  const rows=gKvs["rows"];
+
+  for(let c=0; c<cols; c++){
+    x=c/cols -.49; // 0-.5 to 1-.5 ==> -.5 to .5
+    y=parseFloat(m)*x + parseFloat(b);         // m=1, b=0 ==>    -.5 to .5 
+    r=(y + 0.5)*rows;
+    r=Math.ceil(r);
+    r= rows-Math.floor(r);  // rows to 0
+    index= r*rows + c;
+    el=document.getElementById("grid").children[index];
+    if(typeof(el) != 'undefined' && el != null) {
+      setTimeout( function (col,index) { 
+              el=document.getElementById("grid").children[index];
+	     el.style.background="blue"; }, c*50 + 100, c,index);
+    }
+  }
+}
+//Render Grid
+document.getElementById("grid").innerHTML=
+      createGridElementIntro();
+</script>
+
+<!-- Editor component. Components are View/Controller, no Model. -->
+<script> 
+// Brutal interface, creates HTML 
+function createEditorComponent(code,handler){
+  html=`
+    <div id="editor">
+    <div id="editor-status">editor-001</div>
+    <textarea id="code" 
+      onchange="${handler.name}(this)">
+      ${code}
+    </textarea>
+    </div>
+`;
+  return html;
+}
+
+function createEditorCss(){
+	 cssText=`
+#editor{
+  width:40%;
+  height:90%;
+  float:left;
+}
+#editor textarea{
+  height:100%;
+  width:100%;
+  font-size:13pt;
+}
+
+#editor-status{
+  float:right;
+}
+`
+  return cssText;
+}
+
+// Controller code
+function handleEditorChange(evt){
+    document.getElementById("editor-status").innerText=`${evt}`;
+}
+</script>
+
+
+<!-- INITIALIZE -->
+<script>
+ gKvs={}; // Used by Input and Output, not editor.
+ gKvs.rows=10;
+ gKvs.cols=10;
+ gKvs.m=1;
+ gKvs.b=0;
+function handleCustomEditorChange(evt){
+   document.getElementById("editor-status").innerText=`New Custom.`;
+   document.getElementById("root").innerHTML=
+   document.getElementById("code").value; 
+   handleEditorChange(evt);
+}
+
+// React.createElement(component-type,props,children) where:
+//
+//       1) component-type is div, p or CustomClass, Editor
+//       2) props is properties
+//       3) children are passed down to us so we can render under us
+//
+//
+// RenderDOM.render(element,container,callback) where: 
+//
+//       1) element is the result of createElement()
+//       2) container is the parent to add to 
+//       3) callback is optional and called after update
+
+// For this example, have the component type in the name so 
+// function signature is createTypeofElement(props, children).
+// 
+// The text from the root element we are editing is the 
+// only property.
+//
+// the new EditorComponent should be passed to the analog of 
+// ReactDOM.render(element, container, callback).
+
+// Budget ReactDOM.render() function. Instead of writing a
+// render function and passing the topmost DOM element,
+// grap the top-most "editor" element and set it equal
+// to a newly created HTML string representing the component
+// and it's preset onchange handler.
+document.getElementById("editor").outerHTML=
+  createEditorComponent(document.getElementById("root").innerHTML,
+                        handleCustomEditorChange);
+
+style = document.createElement('style');
+style.innerHTML=createEditorCss();
+document.head.appendChild(style);
+
+se=document.createElement('style');
+se.innerHTML=createGridCss();
+document.head.appendChild(se);
+</script>
+</body>
+<html>
