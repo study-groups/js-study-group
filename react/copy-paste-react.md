@@ -144,5 +144,10 @@ As we have seen, `document.children[1].children[0]` is the same as `document.bod
 
 By adding `data:text/html,` the beginning of our HTML code, we are able to copy and paste our code into the URL of a browser. And by including React, ReactDOM and Babel from  [unpkg](https://unpkg.com/) we are able to provide Babel translation of JSX directly in the browser.
 
-To validate that React was doing it's job an just updating that which needed change, we investigated the DOM in realtime by writing out values of top node of the body tree: `document.body.children[0]` and we saw React was re-rendering only the dynamic time element.
+To validate that React was doing it's job and just updating the DOM element representing changing data, we investigated the DOM in realtime by writing out values of top node of the body tree: `document.body.children[0]` and we saw React was re-rendering only the dynamic time element.
 
+## References
+- https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+- https://reactjs.org/docs/state-and-lifecycle.html
+- https://babeljs.io/
+- https://unpkg.com/
