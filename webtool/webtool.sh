@@ -10,9 +10,25 @@ $svg
 EOF
 }
 
-webtool-server(){
-while true; do 
-	  echo -e "HTTP/1.1 200 OK\n\n $(cat $1)" | nc -l -p 1500 -q 1
+webtool-server-start(){
+  python3 -m http.server ${1:-8000} &
+  PS1="webtool-server> "
+}
+webtool-server-list(){
+  ps -ef | grep [h]ttp.server
+}
+
+webtool-server-stop-all(){
+  kill $(ps aux | grep '[h]ttp.server' | awk '{print $2}')
+
+  PS1="webtool> "
+}
+
+
+
+webtool-server-nc(){
+  while true; do 
+    echo -e "HTTP/1.1 200 OK\n\n $(cat $1)" | nc -l -p 1500 -q 1
   done
 }
 webtool-make-header(){

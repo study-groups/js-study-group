@@ -1,18 +1,25 @@
+source ~/src/study-groups/js-study-group/webtool/webtool.sh
 webtool-build-joystick(){
 
   # sketch.svg is cut-and-paste out of Stylus Lab's Write app.
   export sketch_component=$(cat assets/sketch.svg); 
 
   # component implies internal state
-  export heart_component=$(
+  export heart_component="$(
+    export id=heart_component;
     export color=green; 
     export fill_color=#808; 
     export opacity=.3; 
-    cat assets/heart.component | envsubst;
-  );  
+    # heart.component is svg + $variables above to be replaced 
+    # by envsubst.
+    cat assets/heart_component/element.html | envsubst
+  )";
 
-  # .html.env implies a file that has environment vars in it
+  export javascript_lib=$(cat ./assets/cssPubSub.js)
+  export javascript_init=$(cat ./assets/heart_component/init.js)
+
+  # .env.html implies a file that has environment vars in it
   # envsubst replaces Bash environment variables (e.g. 
   # sketch_component and heart_component).
-  cat index.html.env | envsubst > index.html
+  cat  index.env.html | envsubst 
 }

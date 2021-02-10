@@ -7,20 +7,14 @@ body{
   padding:1rem 20% 0 2rem;
   font-size:18pt;
   font-family:courier;
-  line-height:150%;
+  line-height:140%;
   position:static;
-}
-h2{
-margin-left:.5em;
-}
-.caption{
-  font-style:italic;
 }
 p {
   margin:2em;
 }
-pre, ol, ul{
-  margin-left:2em;
+pre, ol{
+  margin-left:3em;
 }
 a{
   font-weight:bold;
@@ -63,19 +57,27 @@ font on a webpage they are editing. To do this, they add:
 &lt;/script&gt;
 </pre>
 <p>
-This will generate a public session key and a link to the 
-joystick server app:
+This will generate link at the bottom of the page that 
+takes you the joystick server app using a key in the URL.
 </p>
 <pre>https://joystick.study-groups.org?csskey="freshHash"
 </pre> 
 <p>
 The joystick app page will present a sqaure element that tracks the 
-thumb and sends data to the server in real time via websocket 
-secured with TLS.
+thumb and sends to the server.
 </p>
 <p>
-<div style="margin:auto; width:60%">
+Server sends update to all pages that are subscribed via 
+<b>WebSocket</b>.
+<b>cssPubSub.onEvent()</b> dispatches to right 
+<b>handleCssEvent()</b> defined by user to change css value in real time.
+</p>
+
+<h2>Sketches</h2>
+<p>
+<div style="width:60%">
   <div style="width:40%">
+    <div>
 <svg viewBox="100 120 400 400"  xmlns="http://www.w3.org/2000/svg" 
 xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -156,32 +158,25 @@ d="M183.193 253.701 l-0.496 -1.672 -0.038 -0.326 -2.595 1.761 0.639 0.743 0.7 0.
 
 </svg>
 </div>
-<div class="caption">
-Thumb control data sent to server and published to cssPubSub listeners
+  </div>
+  Thumb control data sent to server and published to cssPubSub listeners
 </div>
-</div>
-<p>
-Server sends update to all pages that are subscribed via 
-<b>WebSocket</b>.
-<b>cssPubSub.onEvent()</b> dispatches to right 
-<b>handleCssEvent()</b> defined by user to change css value in real time.
-</p>
-
 
 </p>
 
-<div style="border: 0px solid green;
+<div id="heart_container"
+      style="border: 1px solid green;
             position:fixed;
             bottom:0;
             right:0;
-            width:2rem;
-            height:2rem;
+            width:4rem;
+            height:4rem;
             " >
 <!--
 
 -->
 <svg viewBox="0 0 90 90">
- <path fill="#808" opacity=".3" 
+ <path id="" fill="#808" opacity=".3" 
        d="M 10,30
           A 20,20 0,0,1 50,30
           A 20,20 0,0,1 90,30
@@ -192,9 +187,11 @@ Server sends update to all pages that are subscribed via
 <h2>References</h2>
 <p>
 <ul>
+    <li><a href="https://cloud.google.com/pubsub/docs/overview">
+            Pub/Sub described at Google</a>
     <li>
-        <a href="http://websocketd.com/">
-            Websocketd</a>
+        <a href="https://github.com/robinpokorny/dead-simple">
+            Good implementation of PubSub</a>
     </li>
     <li>
         <a href="https://en.wikipedia.org/wiki/WebSocket">
@@ -204,20 +201,27 @@ Server sends update to all pages that are subscribed via
         <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket">
        WebSocket at MDN</a>
     </li>
-
-    <li><a href="https://cloud.google.com/pubsub/docs/overview">
-            Pub/Sub described at Google</a>
-    <li>
-        <a href="https://github.com/robinpokorny/dead-simple">
-            Good, simple implementation of PubSub</a>
-    </li>
-    <li>
-        <a href="https://tls.ulfheim.net/">
-            The Illustrated TLS Connection</a>
-    </li>
-
-    </ul>
+</ul>
 </p>
 </div>
 </body>
+<script>
+function CssPubSub(){
+    return {
+        subscribe:function(){
+            alert("publish");
+        },
+        publish:function(){
+            alert("publish");
+	}
+    }
+}
+cssPubSub=CssPubSub();
+(function(){ 
+
+cssPubSub.subscribe("heart_container","color");
+
+cssPubSub=CssPubSub();
+})();
+</script>
 </html>
