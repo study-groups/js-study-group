@@ -1,3 +1,5 @@
+*.nginx
+
 # Logs
 logs
 *.log

@@ -1,4 +1,4 @@
-source ~/src/study-groups/js-study-group/webtool/webtool.sh
+source ~/src/js-study-group/webtool/webtool.sh
 webtool-build-joystick(){
 
   # sketch.svg is cut-and-paste out of Stylus Lab's Write app.
@@ -22,4 +22,12 @@ webtool-build-joystick(){
   # envsubst replaces Bash environment variables (e.g. 
   # sketch_component and heart_component).
   cat  index.env.html | envsubst 
+}
+
+joystick-help(){
+cat << EOF
+https://github.com/joewalnes/websocketd/releases
+
+wget https://github.com/joewalnes/websocketd/releases/download/v0.4.1/websocketd-0.4.1-freebsd_amd64.zip
+EOF
 }
