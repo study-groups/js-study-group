@@ -1,10 +1,15 @@
+<html>
+<head>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+</head>
+<body>
 <h1>Springs: harmonic ossciations</h1>
 <p>
 The harmonic oscilator relates <b>Mass</b> and <b>Restorative Force</b>
 of a bounded sytem to it's Period of Oscilation. 
 <script>function Springs() {
-  returns {
-    init: console.log("Springs v001");
+  return {
+    init: function (){console.log("Springs v001");}
   }
 }
 
@@ -23,5 +28,9 @@ function Springs(){
     return publicInterface;
 }
 */</script>
+<script>(function () {
+springs=Springs();
+springs.init();
+})();</script>
 </body>
 </html>

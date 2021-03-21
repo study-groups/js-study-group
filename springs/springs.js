@@ -1,6 +1,6 @@
 function Springs() {
-  returns {
-    init: console.log("Springs v001");
+  return {
+    init: function (){console.log("Springs v001");}
   }
 }
 

@@ -6,18 +6,22 @@ springs-build(){
   springs-make-head
   springs-make-content
   springs-make-js "$(cat ./springs.js)"
+  springs-make-js "$(cat ./app.js)"
   springs-make-footer
 }
 
 springs-serve(){
   while true; do 
+    springs-build > index.html
     (printf "HTTP/1.1 200 OK\n\n"; cat ${1:-"index.html"}) | 
     nc -l ${2:-2222} -q 1;
   done
 }
 
 springs-make-head(){
-   webtool-make-header $1
+   local favicon="<link rel=\"icon\" href=\"data:;base64,iVBORw0KGgo=\">"
+
+   webtool-make-header "$favicon"
 }
 
 springs-make-js(){
