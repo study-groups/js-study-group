@@ -46,6 +46,9 @@ EOF
 webtool-make-footer(){
   cat <<EOF
 </body>
+<footer>
+$1
+</footer>
 </html>
 EOF
 }
