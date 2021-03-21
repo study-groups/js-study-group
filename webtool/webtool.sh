@@ -37,6 +37,7 @@ webtool-make-header(){
   cat <<EOF
 <html>
 <head>
+$1
 </head>
 <body>
 EOF
