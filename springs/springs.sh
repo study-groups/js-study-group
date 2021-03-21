@@ -10,33 +10,40 @@ springs-build(){
   springs-make-footer
 }
 
+# aggressively kill all children
+springs-kill(){
+  pkill -P $$
+}
+
 springs-serve(){
   while true; do 
-    springs-build > index.html
+    source springs.sh
+    springs-build > index.html;
     (printf "HTTP/1.1 200 OK\n\n"; cat ${1:-"index.html"}) | 
     nc -l ${2:-2222} -q 1;
   done
 }
 
 springs-make-head(){
+   local nl=$'\n'
+   css="$nl<style>$nl$(cat ./style.css)$nl</style>"
    local favicon="<link rel=\"icon\" href=\"data:;base64,iVBORw0KGgo=\">"
-
-   webtool-make-header "$favicon"
+   webtool-make-header "$favicon $css"
 }
 
 springs-make-js(){
-  echo "<script>$1</script>"
+  printf "<script>$1</script>"
 }
 
 springs-make-footer(){
-   webtool-make-footer $1
+   webtool-make-footer "ver 002pre1c"
 }
 
 springs-make-content(){
 cat <<EOF
-<h1>Springs: harmonic ossciations</h1>
+<h1>Springs: harmonic oscillations</h1>
 <p>
-The harmonic oscilator relates <b>Mass</b> and <b>Restorative Force</b>
-of a bounded sytem to it's Period of Oscilation. 
+The harmonic oscilator relates <b>Mass</b> and <b>restorative force</b>
+of a bounded sytem to it's <b>period of oscillation</b>. 
 EOF
 }
