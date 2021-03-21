@@ -1,0 +1,68 @@
+<html>
+<head>
+<link href="reset.css" rel="stylesheet">
+<link href="chat.css"  rel="stylesheet">
+<style>
+
+.container{
+  height:5rem;
+  border: 1px solid #888;
+  padding-top:.5rem;
+  margin-bottom:.5rem;
+}
+
+h1{
+
+}
+#output, #input, #server{
+font-family:courier;
+width:60%;
+margin:auto;
+padding-top:.5rem;
+padding-left:.5rem;
+display:block;
+}
+
+#input{
+  margin:.5em auto .5em auto;
+}
+
+
+</style>
+</head>
+<body>
+<h1>Websocket chat example</h1>
+
+<div class="container">
+<div id="output"></div>
+</div>
+
+<input id="input" name="input" type="text" value="enter text">
+
+<div class="container">
+<div id="server"></div>
+</div>
+
+</body>
+<script>
+input=document.getElementById("input");
+output=document.getElementById("output");
+server=document.getElementById("server");
+
+input.addEventListener('change',handleInput);
+
+function handleInput(e){
+  output.innerHTML="To server: "+input.value;
+  ws.send(input.value);
+}
+
+var ws = new WebSocket('ws://js.study-groups.org:9200/');
+
+ws.onmessage = function(event) {
+   server.innerHTML=event.data; 
+   console.log(event);
+};
+
+</script>
+
+</html>

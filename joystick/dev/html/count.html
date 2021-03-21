@@ -1,0 +1,67 @@
+<html>
+<head>
+<style>
+body{
+  font-family:courier;
+}
+.img-container{
+max-width:60%; 
+float:left;
+text-align:center;
+margin-bottom:2rem;
+font-style:italic;
+}
+pre{
+  margin-left:2rem;
+}
+</style>
+</head>
+<body>
+<h1>Websocket example: count.html</h1>
+
+<h2>Server side program</h2>
+<p>
+<b>websocketd</b> serves both HTML via <tt>staticdir</tt>
+and arbitrary real-time data via <tt>ws://</tt> protocol,
+both on the same port.
+</p>
+<pre><code>
+count.sh 
+#!/bin/bash
+# Count from 1 to 10 with a sleep
+for ((COUNT = 1; COUNT <= 10; COUNT++)); do
+  echo 
+    sleep 0.5
+    done
+</code></pre>
+
+<h2> Client side </h2>
+<ul>
+<li>Run server code: 
+	<tt>websocketd --staticdir. --port=9200 ./count.sh</tt></li>
+<li>load <a href="./count.html">count.html</a>
+	file either by file:// or http://</tt></li>
+<li>view console outout</li>
+</ul>
+
+<h2>Screenshots</h2>
+<div class="img-container">
+<img style="width:100%" 
+src="assets/Screenshot_2020-11-25_19-56-54.png">
+Server running websocketd running test.sh that outputs to stdout.
+</div>
+<div class="img-container"> 
+  <img style="width:100%" 
+       src="assets/Screenshot_2020-11-25_19-50-53.png">
+</div>
+
+<script>
+var ws = new WebSocket('ws://js.study-groups.org:9200/');
+
+ws.onmessage = function(event) {
+  console.log('Count is: ' + event.data);
+};
+</script>
+
+</body>
+</html>
