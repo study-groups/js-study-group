@@ -1,0 +1,8 @@
+footer {
+  font-family:monospace;
+  position: absolute;
+  bottom: 0;
+  width: 80%;
+  text-align:right;
+  height: 2.5rem;           /* Footer height */
+}
