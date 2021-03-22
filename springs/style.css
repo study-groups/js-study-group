@@ -1,8 +1,78 @@
+div {
+  margin:0;
+  padding:0;
+}
+body{
+  margin:0;
+  background:#eee;
+  padding:2em;
+}
+
+fieldset {
+  margin:0;
+  padding:0;
+  width:100%;
+}
+
+.slider{
+  display:flex;
+  width:100%;
+  margin:0;
+  padding:0;
+  justify-content: space-between;
+  border: 1px solid #808;
+}
+
+.slider label{
+  min-width:10%;
+  text-align:left;
+}
+
+.slider .rangeDisplay {
+  min-width:10%;
+  text-align:right;
+}
+
+
+.slider input[type=range] {
+ -webkit-appearance: none;
+ background:transparent;
+  flex-grow:2;
+}
+
+.wavemachine{
+  display: flex;
+  align-items: center;
+  margin:0;
+  padding:0;
+  justify-content: center;
+  border: 1px solid blue;
+  width:100%;
+}
+
+
+.controller {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin:0;
+  padding:0;
+  width:100%;
+  border: 1px solid green;
+}
+
+.mapper {
+  min-height:3rem;
+  border: 1px solid orange;
+
+}
 footer {
   font-family:monospace;
+  background:#bbb;
   position: absolute;
   bottom: 0;
-  width: 80%;
-  text-align:right;
+  left: 0;
+  width:100%;
+  text-align:center;
   height: 2.5rem;           /* Footer height */
 }

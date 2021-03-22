@@ -43,7 +43,22 @@ springs-make-content(){
 cat <<EOF
 <h1>Springs: harmonic oscillations</h1>
 <p>
-The harmonic oscilator relates <b>Mass</b> and <b>restorative force</b>
+The harmonic oscillator relates <b>mass</b> and <b>restorative force</b>
 of a bounded sytem to it's <b>period of oscillation</b>. 
+
+<div class="wavemachine wavemachine-1">
+<fieldset>
+  <div class="slider slider1">
+    <label for="rangeVal">fre:</label>
+    <input type ="range" max="1024" min="20"
+        step="1" name="rangeVal" id="rangeVal" value="200">
+    </input>
+    <div class="rangeDisplay"></div>
+  </div>
+</fieldset>
+</div>
+<div class="mapper mapper-1"></div>
+<div class="controller controller-1">
+</div>
 EOF
 }

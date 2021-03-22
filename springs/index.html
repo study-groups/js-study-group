@@ -1,12 +1,107 @@
 <html>
 <head>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<link rel="icon" href="data:;base64,iVBORw0KGgo="> 
+<style>
+div {
+  margin:0;
+  padding:0;
+}
+body{
+  margin:0;
+  background:#eee;
+  padding:2em;
+}
+
+fieldset {
+  margin:0;
+  padding:0;
+  width:100%;
+}
+
+.slider{
+  display:flex;
+  width:100%;
+  margin:0;
+  padding:0;
+  justify-content: space-between;
+  border: 1px solid #808;
+}
+
+.slider label{
+  min-width:10%;
+  text-align:left;
+}
+
+.slider .rangeDisplay {
+  min-width:10%;
+  text-align:right;
+}
+
+
+.slider input[type=range] {
+ -webkit-appearance: none;
+ background:transparent;
+  flex-grow:2;
+}
+
+.wavemachine{
+  display: flex;
+  align-items: center;
+  margin:0;
+  padding:0;
+  justify-content: center;
+  border: 1px solid blue;
+  width:100%;
+}
+
+
+.controller {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin:0;
+  padding:0;
+  width:100%;
+  border: 1px solid green;
+}
+
+.mapper {
+  min-height:3rem;
+  border: 1px solid orange;
+
+}
+footer {
+  font-family:monospace;
+  background:#bbb;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width:100%;
+  text-align:center;
+  height: 2.5rem;           /* Footer height */
+}
+</style>
 </head>
 <body>
-<h1>Springs: harmonic ossciations</h1>
+<h1>Springs: harmonic oscillations</h1>
 <p>
-The harmonic oscilator relates <b>Mass</b> and <b>Restorative Force</b>
-of a bounded sytem to it's Period of Oscilation. 
+The harmonic oscillator relates <b>mass</b> and <b>restorative force</b>
+of a bounded sytem to it's <b>period of oscillation</b>. 
+
+<div class="wavemachine wavemachine-1">
+<fieldset>
+  <div class="slider slider1">
+    <label for="rangeVal">fre:</label>
+    <input type ="range" max="1024" min="20"
+        step="1" name="rangeVal" id="rangeVal" value="200">
+    </input>
+    <div class="rangeDisplay"></div>
+  </div>
+</fieldset>
+</div>
+<div class="mapper mapper-1"></div>
+<div class="controller controller-1">
+</div>
 <script>function Springs() {
   return {
     init: function (){console.log("Springs v001");}
@@ -27,10 +122,65 @@ function Springs(){
     }
     return publicInterface;
 }
-*/</script>
-<script>(function () {
+*/</script><script>(function () { 
 springs=Springs();
+var wavemachine = document.querySelector(".wavemachine-1");
+
+wavemachine.getRange = function (n) { 
+    return wavemachine.querySelector("fieldset")
+            .children[n].children[1];
+}
+
+wavemachine.getDisplay = function (n) { 
+    return wavemachine.querySelector("fieldset")
+            .children[n].children[2];
+}
+
+
+controller = document.querySelector(".controller-1");
+controller.get = function (n){ return controller.children[n]; }
+
+slider = document.createElement('div');
+slider.className = "slider control-1"
+slider.dataset.val = "20"
+
+input = document.createElement('input');
+input.type = 'range';
+input.min = 0.0;
+input.max = 1;
+input.step = .001;
+
+let label=document.createElement('label')
+let val=document.createElement('div')
+label.innerHTML="lfo";
+label.className="label";
+val.innerHTML="0 Hz";
+val.className="rangeDisplay";
+
+slider.appendChild(label);
+slider.appendChild(input);
+slider.appendChild(val);
+controller.appendChild(slider);
+
+slider.children[1].value = 0.8;
+slider.children[1].addEventListener("input", function (evt) {
+  controller.get(0).children[2].innerHTML=evt.target.value; 
+  updatePendulum(evt);
+  ;
+});
+
+wavemachine.getRange(0).addEventListener("input",function(evt){
+    wavemachine.getDisplay(0).innerHTML=evt.target.value;
+});
+
+function updatePendulum(evt){
+   wavemachine.getRange(0).value=1024*evt.target.value;
+   wavemachine.getRange(0).dispatchEvent(new Event('input'));
+}
+
 springs.init();
-})();</script>
-</body>
+})();</script></body>
+<footer>
+ver 002pre1c
+</footer>
 </html>
