@@ -2,14 +2,6 @@ webtool-set-root(){
   WEBTOOL_ROOT=$1;
 }
 
-webtool-make-svg(){
-  local svgInputFile=$1;
-  local svg=$(cat $svgInputFile)
-  cat<<EOF
-$svg
-EOF
-}
-
 webtool-server-start(){
   python3 -m http.server ${1:-8000} &
   PS1="webtool-server> "
@@ -32,11 +24,18 @@ webtool-serve-build() {
   done
 }
 
+# Better version in js-study-group/springs
 webtool-server-nc(){
-  while true; do 
-    echo -e "HTTP/1.1 200 OK\n\n $(cat $1)" | nc -l -p 1500 -q 1
+  while true; do
+    webtool-build-hook
+    echo -e "HTTP/1.1 200 OK\n\n $(cat $1)" | nc -l -p ${2:-1234} -q 1
   done
 }
+
+webtool-build-hook(){
+  echo "override this function" > /dev/null
+}
+
 webtool-make-header(){
   # This uses Bash's Heredoc syntax of <<WORD to specify stdio 
   # which cat will echo back to stdout after variable substituitons, etc.
@@ -56,5 +55,14 @@ webtool-make-footer(){
 $1
 </footer>
 </html>
+EOF
+}
+
+# DEVELOPMENT
+webtool-make-svg(){
+  local svgInputFile=$1;
+  local svg=$(cat $svgInputFile)
+  cat<<EOF
+$svg
 EOF
 }
