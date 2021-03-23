@@ -16,19 +16,11 @@ webtool-server-stop-all(){
   PS1="webtool> "
 }
 
-webtool-serve-build() {
- while true; do
-    source build.sh
-    (printf "HTTP/1.1 200 OK\n\n"; cat ${1:-"index.html"}) |
-    nc -l ${2:-2222} -q 1;
-  done
-}
-
-# Better version in js-study-group/springs
 webtool-server-nc(){
   while true; do
     webtool-build-hook
-    echo -e "HTTP/1.1 200 OK\n\n $(cat $1)" | nc -l -p ${2:-1234} -q 1
+    (printf "HTTP/1.1 200 OK\n\n"; cat ${1:-"index.html"}) |
+    nc -l ${2:-1234} -q 1;
   done
 }
 
