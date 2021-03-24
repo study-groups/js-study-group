@@ -1,3 +1,9 @@
+webtool-node-process() {
+  # $1: file to run
+  # $@: additional args
+  node "$1" "${@:2}"
+}
+
 webtool-set-root(){
   WEBTOOL_ROOT=$1;
 }
@@ -16,16 +22,26 @@ webtool-server-stop-all(){
   PS1="webtool> "
 }
 
+webtool-server-ip(){
+  hostname -I | awk '{print $1}'
+}
+
 webtool-server-nc(){
+  local port=${1:-"1234"}
+  local file=${2:-"index.html"}
+  local ip="$(webtool-server-ip)"
+
+  echo "Open http://$ip:$port" > /dev/stderr
+
   while true; do
     webtool-build-hook
-    (printf "HTTP/1.1 200 OK\n\n"; cat ${1:-"index.html"}) |
-    nc -l ${2:-1234} -q 1;
+    (printf "HTTP/1.1 200 OK\n\n"; cat $file ) |
+    nc -l $port -q 1;
   done
 }
 
 webtool-build-hook(){
-  echo "override this function" > /dev/null
+  echo "override this function" > /dev/stderr
 }
 
 webtool-make-header(){
