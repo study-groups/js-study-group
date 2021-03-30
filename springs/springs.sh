@@ -1,5 +1,5 @@
 PS1="springs> "
-
+VER="002pre1d"
 source ../webtool/webtool.sh
 
 springs-build(){
@@ -7,7 +7,7 @@ springs-build(){
   springs-make-content
   springs-make-js "$(cat ./springs.js)"
   springs-make-js "$(cat ./app.js)"
-  springs-make-footer
+  springs-make-footer $VER 
 }
 
 # aggressively kill all children
@@ -36,7 +36,7 @@ springs-make-js(){
 }
 
 springs-make-footer(){
-   webtool-make-footer "ver 002pre1c"
+   webtool-make-footer "$1"
 }
 
 springs-make-content(){
@@ -48,7 +48,7 @@ of a bounded sytem to it's <b>period of oscillation</b>.
 
 <div class="wavemachine wavemachine-1">
 <fieldset>
-  <div class="slider slider1">
+  <div class="slider slider-1">
     <label for="rangeVal">fre:</label>
     <input type ="range" max="1024" min="20"
         step="1" name="rangeVal" id="rangeVal" value="200">
@@ -57,7 +57,9 @@ of a bounded sytem to it's <b>period of oscillation</b>.
   </div>
 </fieldset>
 </div>
-<div class="mapper mapper-1"></div>
+<div class="mapper mapper-1">
+  Mapper from controls to pendula attributes
+</div>
 <div class="controller controller-1">
 </div>
 EOF

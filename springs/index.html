@@ -90,7 +90,7 @@ of a bounded sytem to it's <b>period of oscillation</b>.
 
 <div class="wavemachine wavemachine-1">
 <fieldset>
-  <div class="slider slider1">
+  <div class="slider slider-1">
     <label for="rangeVal">fre:</label>
     <input type ="range" max="1024" min="20"
         step="1" name="rangeVal" id="rangeVal" value="200">
@@ -99,7 +99,9 @@ of a bounded sytem to it's <b>period of oscillation</b>.
   </div>
 </fieldset>
 </div>
-<div class="mapper mapper-1"></div>
+<div class="mapper mapper-1">
+  Mapper from controls to pendula attributes
+</div>
 <div class="controller controller-1">
 </div>
 <script>function Springs() {
@@ -181,6 +183,6 @@ function updatePendulum(evt){
 springs.init();
 })();</script></body>
 <footer>
-ver 002pre1c
+002pre1d
 </footer>
 </html>
