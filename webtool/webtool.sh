@@ -1,7 +1,16 @@
-webtool-node-process() {
+#!/bin/bash
+
+webtool-hello() {
+  echo "hello"
+}
+
+node="/snap/bin/node"
+node_server="/home/admin/src/js-study-group/webtool/node-server.js"
+webtool-node-server() {
+  webtool-build-hook
   # $1: file to run
-  # $@: additional args
-  node "$1" "${@:2}"
+  # $@: additional args (port, html_path, json_path)
+  $node $node_server "${@:1}"
 }
 
 webtool-set-root(){
@@ -45,7 +54,7 @@ webtool-build-hook(){
 }
 
 webtool-make-header(){
-  # This uses Bash's Heredoc syntax of <<WORD to specify stdio 
+  # This uses Bash's Heredoc syntax of <<WORD to specify stdio
   # which cat will echo back to stdout after variable substituitons, etc.
   cat <<EOF
 <html>
