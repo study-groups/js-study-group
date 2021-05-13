@@ -5,8 +5,14 @@ source ../webtool/webtool.sh
 springs-build(){
   springs-make-head
   springs-make-content
-  springs-make-js "$(cat ./springs.js)"
-  springs-make-js "$(cat ./app.js)"
+  echo "<script>"
+  cat ./WaveMachine.js
+  cat ./ValueMapper.js
+  cat ./Slider.js
+  cat ./bibeats.js
+  cat ./springs.js
+  cat ./app.js
+  echo "</script>"
   springs-make-footer
 }
 
@@ -41,24 +47,15 @@ springs-make-footer(){
 
 springs-make-content(){
 cat <<EOF
-<h1>Springs: harmonic oscillations</h1>
-<p>
-The harmonic oscillator relates <b>mass</b> and <b>restorative force</b>
-of a bounded sytem to it's <b>period of oscillation</b>. 
-
-<div class="wavemachine wavemachine-1">
-<fieldset>
-  <div class="slider slider1">
-    <label for="rangeVal">fre:</label>
-    <input type ="range" max="1024" min="20"
-        step="1" name="rangeVal" id="rangeVal" value="200">
-    </input>
-    <div class="rangeDisplay"></div>
-  </div>
-</fieldset>
-</div>
-<div class="mapper mapper-1"></div>
-<div class="controller controller-1">
-</div>
+<main role="main">
+    <h1>Springs: harmonic oscillations</h1>
+    <p>
+      The harmonic oscillator relates <b>mass</b> and <b>restorative force</b>
+      of a bounded sytem to it's <b>period of oscillation</b>. 
+    </p>
+    <wave-machine id="wave-machine">wavemachine</wave-machine>
+    <value-mapper id="mapper">mapper</value-mapper>
+    <div id="controller"></div>
+</main>
 EOF
 }

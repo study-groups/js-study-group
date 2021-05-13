@@ -51,7 +51,7 @@ fieldset {
 }
 
 
-.controller {
+#controller {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,11 +61,13 @@ fieldset {
   border: 1px solid green;
 }
 
-.mapper {
+#mapper {
   min-height:3rem;
   border: 1px solid orange;
-
+  font-family:monospace;
+  white-space: pre;
 }
+
 footer {
   font-family:monospace;
   background:#bbb;
