@@ -1,3 +1,18 @@
+#!/bin/bash
+
+webtool-hello() {
+  echo "hello"
+}
+
+node="/snap/bin/node"
+node_server="/home/admin/src/js-study-group/webtool/node-server.js"
+webtool-node-server() {
+  webtool-build-hook
+  # $1: file to run
+  # $@: additional args (port, html_path, json_path)
+  $node $node_server "${@:1}"
+}
+
 webtool-set-root(){
   WEBTOOL_ROOT=$1;
 }
@@ -16,28 +31,30 @@ webtool-server-stop-all(){
   PS1="webtool> "
 }
 
-webtool-serve-build() {
- while true; do
-    source build.sh
-    (printf "HTTP/1.1 200 OK\n\n"; cat ${1:-"index.html"}) |
-    nc -l ${2:-2222} -q 1;
-  done
+webtool-server-ip(){
+  hostname -I | awk '{print $1}'
 }
 
-# Better version in js-study-group/springs
 webtool-server-nc(){
+  local port=${1:-"1234"}
+  local file=${2:-"index.html"}
+  local ip="$(webtool-server-ip)"
+
+  echo "Open http://$ip:$port" > /dev/stderr
+
   while true; do
     webtool-build-hook
-    echo -e "HTTP/1.1 200 OK\n\n $(cat $1)" | nc -l -p ${2:-1234} -q 1
+    (printf "HTTP/1.1 200 OK\n\n"; cat $file ) |
+    nc -l $port -q 1;
   done
 }
 
 webtool-build-hook(){
-  echo "override this function" > /dev/null
+  echo "override this function" > /dev/stderr
 }
 
 webtool-make-header(){
-  # This uses Bash's Heredoc syntax of <<WORD to specify stdio 
+  # This uses Bash's Heredoc syntax of <<WORD to specify stdio
   # which cat will echo back to stdout after variable substituitons, etc.
   cat <<EOF
 <html>

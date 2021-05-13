@@ -1,5 +1,5 @@
 PS1="springs> "
-
+VER="002pre1d"
 source ../webtool/webtool.sh
 
 springs-build(){
@@ -42,11 +42,12 @@ springs-make-js(){
 }
 
 springs-make-footer(){
-   webtool-make-footer "ver 002pre1c"
+   webtool-make-footer "$1"
 }
 
 springs-make-content(){
 cat <<EOF
+<<<<<<< HEAD
 <main role="main">
     <h1>Springs: harmonic oscillations</h1>
     <p>
