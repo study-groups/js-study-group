@@ -4,22 +4,32 @@ class WaveMachine extends HTMLElement {
 
     constructor() {
         super();
-        this.pendula="notset-in-constructor";
-        this.pendula=this.getAttribute('pendula');
-        this.innerHTML += this.createInnerHtml(this.pendula);
+        this.attachShadow({mode: 'open'});                                      
     }
 
+    connectedCalleback() {
+        init();
+    }
+
+    init(){
+        slider = document.createElement('nom-slider');
+        slider.className="slider-1";
+        slider.value=.5;
+        slider.label="slider1";
+        //this.shadowRoot.appendChild(slider);
+    }
+/*
     createInnerHtml(pendula){
         return `<fieldset>
-            <div class="slider slider1">
+            <div class="slider">
             <label for="rangeVal">freq:</label>
             <input type ="range" max="1024" min="20"
-                step="1" name="rangeVal" id="rangeVal" value="200">
+                step="1" name="rangeVal" id="101" value="200">
             </input>
             <div class="rangeDisplay"></div>
             </div> </fieldset>`
     } 
-
+*/
     getRange(n) { 
         return this.querySelector("fieldset")
                 .children[n].children[1];

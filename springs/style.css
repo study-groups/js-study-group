@@ -66,6 +66,7 @@ fieldset {
   border: 1px solid orange;
   font-family:monospace;
   white-space: pre;
+  display:block;
 }
 
 footer {

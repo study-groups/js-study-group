@@ -7,8 +7,8 @@ springs-build(){
   springs-make-content
   echo "<script>"
   cat ./WaveMachine.js
-  cat ./ValueMapper.js
-  cat ./Slider.js
+  cat ./NomMapper.js
+  cat ./NomSlider.js
   cat ./bibeats.js
   cat ./springs.js
   cat ./app.js
@@ -47,7 +47,6 @@ springs-make-footer(){
 
 springs-make-content(){
 cat <<EOF
-<<<<<<< HEAD
 <main role="main">
     <h1>Springs: harmonic oscillations</h1>
     <p>
