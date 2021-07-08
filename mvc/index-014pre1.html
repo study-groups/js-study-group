@@ -1,0 +1,186 @@
+<!-- Creates global variable for sharing key/vals. -->
+<html>
+<head></head>
+<body id="root">
+<div id="cli"></div>
+<div id="grid"></div>
+
+<script>
+
+<!-- INITIALIZE -->
+ gKvs={};
+ gKvs.rows=10;
+ gKvs.cols=10;
+ gKvs.m=1;
+ gKvs.b=0;
+
+let gModel = {
+  cliComponent: { status:"init in gModel",
+                  vars: {"rows":10, 
+                         "cols":10 ,
+                           m:1,
+                           b:0
+                        }
+                }
+};
+
+function CliComponent(props={status:"cli status"}) {
+    return {
+        status: props.status,
+        submit: handleSubmit,
+        render: () => `
+           <div style="font-size:.75rem" id="info">mvc-014pre1</div>
+           <input id="cli">
+           <button onclick='handleSubmit(this);'>update</button>
+           <div id="status">status not set</div>
+           <div style="font-family:courier;
+                       white-space:pre;
+                       font-size:.75rem" 
+                   id="vars">
+               vars not set
+           </div>
+        `  
+   }
+}
+
+// Controller
+function handleSubmit(evt) {
+    let keyVals={};
+    let cliInput=document.getElementById("cli").value;
+    let cliTokens=cliInput.split(" ");
+    let cmd = cliTokens[0]; // first is cmd
+    kvs = cliTokens.slice(1); // first is cmd
+    kvs.map( (kv) => keyVals[ kv.split("=")[0] ] 
+                     = kv.split("=")[1]  );
+
+   document.getElementById("info").innerHTML=`cmd is ${cmd}`;
+    // Business logic
+    if( cmd==="create"){ createGrid(); }
+
+    if( cmd==="plot") {
+        document.getElementById("info").innerHTML="cmd === plot";
+        plotLine( gModel.cliComponent.vars.m,
+                  gModel.cliComponent.vars.b); 
+    }
+
+    // Model
+    let cliComponent = gModel.cliComponent;
+    cliComponent.vars = {...gModel.cliComponent.vars, ...keyVals};
+    gModel = {...gModel, cliComponent}; 
+    
+    // View
+    document.getElementById("status").innerHTML=cliInput;
+    document.getElementById("vars").
+         innerHTML=JSON.stringify(gModel, null, 4);
+}
+
+function createGrid(){
+   grid=document.getElementById("grid").innerHTML="Calculating...";
+   setTimeout( () => { 
+	   //createGridElement("grid",gKvs["rows"],gKvs["cols"]) }, 
+	   createGridElement("grid",gModel.cliComponent.vars.rows,
+                                gModel.cliComponent.vars.cols) }, 
+	   100);
+}
+
+function render(rootId){
+
+  // Template
+  document.getElementById(rootId).innerHTML=
+      ` <div style="float:left; width:50%">
+              ${CliComponent().render()}
+        </div>
+        <div  style="float:right;" id="grid"> </div>`;
+
+   // Dynamic   
+   createGridElement("grid",
+                    gModel.cliComponent.vars.rows,
+                    gModel.cliComponent.vars.cols);
+
+ 
+   // CSS 
+
+}
+
+render("root"); // Does not include grid or editor
+
+function createGridCss(){
+  return `
+:root {
+  --grid-cols: 1;
+  --grid-rows: 1;
+}
+
+#grid {
+
+  float:left; 
+  width:15rem; 
+  height:15rem; 
+  margin:2rem;
+  border:1px 
+  solid red;
+
+  display: grid;
+  grid-template-rows: repeat(var(--grid-rows), 1fr);
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+}
+
+.grid-item {
+  border: 1px solid #ddd;
+  margin:0;
+  padding:0;
+  text-align: center;
+  border-radius:50%;
+}
+  `;
+}
+
+function createGridElement(id,rows,cols){
+
+  container = document.getElementById(id);
+  container.textContent="";
+  container.style.setProperty('--grid-rows', rows);
+  container.style.setProperty('--grid-cols', cols);
+
+  for (c = 0; c < (rows * cols); c++) {
+    let cell = document.createElement("div");
+    //cell.innerText = (c + 1);
+    container.appendChild(cell).className = "grid-item";
+  };
+}
+
+/*
+  y = m * x + b
+
+  We want x and y to range from [-.5, .5]
+  We want r and c to range from [0, rows] and [0, cols]
+*/
+function plotLine(m,b){
+  //const cols=gKvs["cols"];
+  //const rows=gKvs["rows"];
+  const cols=gModel.cliComponent.vars.cols;
+  const rows=gModel.cliComponent.vars.rows;
+
+
+  for(let c=0; c<cols; c++){
+    x=c/cols -.49;                     // 0-.5 to 1-.5 ==> -.5 to .5
+    y=parseFloat(m)*x + parseFloat(b); // m=1, b=0     ==> -.5 to .5 
+    r=(y + 0.5)*rows;
+    r=Math.ceil(r);
+    r= rows-Math.floor(r); // rows to 0
+    index= r*rows + c;
+    el=document.getElementById("grid").children[index];
+    if(typeof(el) != 'undefined' && el != null) {
+      setTimeout( function (col,index) { 
+              el=document.getElementById("grid").children[index];
+	     el.style.background="blue"; }, c*50 + 100, c,index);
+    }
+  }
+}
+
+se=document.createElement('style');
+se.innerHTML=createGridCss();
+document.head.appendChild(se);
+</script>
+</body>
+<html>

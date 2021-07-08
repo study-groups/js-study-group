@@ -73,6 +73,16 @@ fieldset {
   display:block;
 }
 
+#mapper h3 {
+  margin:0;
+  padding:0; 
+}
+
+nom-mapper: {
+  display:block;
+  border:1px solid red;
+}
+
 footer {
   font-family:monospace;
   background:#bbb;
@@ -93,8 +103,8 @@ footer {
       of a bounded sytem to it's <b>period of oscillation</b>. 
     </p>
     <wave-machine id="wave-machine">wavemachine</wave-machine>
-    <value-mapper id="mapper">mapper</value-mapper>
-    <div id="controller"></div>
+    <nom-mapper id="nom-mapper">mapper</nom-mapper>
+    <div id="controller">Controller</div>
 </main>
 <script>
 class WaveMachine extends HTMLElement {
@@ -129,16 +139,6 @@ class WaveMachine extends HTMLElement {
             </div> </fieldset>`
     } 
 */
-    getRange(n) { 
-        return this.querySelector("fieldset")
-                .children[n].children[1];
-    }
-
-   getDisplay(n) { 
-        return this.querySelector("fieldset")
-                .children[n].children[2];
-    }
-
 }
 
 customElements.define('wave-machine', WaveMachine);
@@ -156,7 +156,9 @@ class NomMapper extends HTMLElement {
         });
 
         this.addEventListener("mapper", function (evt) {
-            let obj=document.querySelector(evt.detail.querySelector);
+            let qs=evt.detail.mapToQuerySelector;
+            let root = document.querySelector("nom-slider").shadowRoot; 
+            let obj=root.querySelector(evt.detail.mapToQuerySelector);
             let mappedVal =evt.detail.value;
             let sendDetail =    { id: evt.timeStamp, 
                                  type:"slider.set",
@@ -169,8 +171,14 @@ class NomMapper extends HTMLElement {
         });
      }
 
+    connectedCallback(){
+         this.render();
+    }
+
     render(inDetail,outDetail) {
-         this.shadowRoot.innerHTML =
+         //this.shadowRoot.innerHTML ="<h3>Mapper</h3>";
+         this.shadowRoot.innerHTML ="Mapper\n\n";
+         this.shadowRoot.innerHTML +=
              `detailIn: ${JSON.stringify(inDetail,null,4)}\n\n`;
          this.shadowRoot.innerHTML +=
               `detailOut: ${JSON.stringify(outDetail,null,4)}`;
@@ -195,6 +203,7 @@ class NomSlider extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'}); 
+        this.mapToQuerySelector="notyet";
         this.init();
     }
 
@@ -217,34 +226,37 @@ class NomSlider extends HTMLElement {
         val.innerHTML="0 Hz";
         val.className="rangeDisplay";
 
-
 /* 
+The "input" event is sent by a slider (i.e. input DOM element) 
+that is a child of this NomSlider.
+
 Reach down into children to grab value of the slider (1) and set 
-the value display of this slider, should be via inputToValue().
+the value display of this slider to reflect current value.
+Should be via inputToValue().
 
 Then send a custom event to the Mapper informing the mapper 
 that this slider is changing. This is done by passing a custom
 object as the 'detail' item. The detail item is part of the DOM
-specification and is how NOM (node object model) objets are passed
+specification and is how NOM (node object model) objects are passed
 between componentents.
-*/    
-     this.addEventListener("input", (evt) => { 
-            // self reflection
-            this.shadowRoot.children[2].innerHTML=
-            this.shadowRoot.children[1].value;
+*/
+    this.addEventListener("input", (evt) => { 
+        // self reflection
+        this.shadowRoot.children[2].innerHTML=
+        this.shadowRoot.children[1].value;
 
-            // this was set when the slider was created.
-            let qs=`.${this.shadowRoot.className}`;
+        // mapToQuerySelector was set when another slider was created.
+        // This is what we want mapper to call in the mapper listener.
 
-            document.querySelector('#mapper')
-               .dispatchEvent( new CustomEvent('mapper',
-                              { detail:
-                                  { id:evt.timeStamp,
-                                    type:"mapValueToQuerySelector",
-                                    data:this.value,
-                                    querySelector:qs
-                                  }
-                               }));
+        document.querySelector('#nom-mapper')
+           .dispatchEvent( new CustomEvent('mapper',
+               { detail:
+                   { id:evt.timeStamp,
+                     type:"mapValueToQuerySelector",
+                     data:this.value,
+                     mapToQuerySelector:this.mapToQuerySelector 
+                   }
+              }));
         });                                                                       
         this.shadowRoot.appendChild(label);  // children[0]
         this.shadowRoot.appendChild(input);  // children[1]
@@ -257,6 +269,12 @@ between componentents.
 
     set value(v) { this.shadowRoot.children[2].innerHTML=v };
 
+
+    set id(v) {   this.setAttribute('id', v);}
+
+//    set mapToQuerySelector(str) { 
+//        this.mapToQuerySelector=str;
+//    }
 
     get value() {
          return this.shadowRoot.children[1].value;
@@ -360,27 +378,6 @@ function BiBeat() {
 // This plays in one ear: 400hz, 600hz, 800hz
 // And the other ear: 408hz, 612hz, 816hz
 //set(4, 200, [2, 3, 4])
-function Springs() {
-  return {
-    init: function (){console.log("Springs v001");}
-  }
-}
-
-/*
-function Springs(){
-  var springs={};
-  publicInterface = {
-    add: function(name,mapToFun) {
-      maps[name]=mapToFun;
-    },
-    get: function(id) {
-           return maps[id];
-    },
-    map:function(id,value){return maps[id](value);}
-    }
-    return publicInterface;
-}
-*/
 window.addEventListener('load', () => {
     // wavemachine is collection of oscilators with silders
     const wavemachine = document.getElementById("wave-machine");
@@ -388,24 +385,28 @@ window.addEventListener('load', () => {
     slider = document.createElement('nom-slider');
     slider.label="wm1";
     slider.id="wm1";
+    slider.shadowRoot.id="wm1";
     wavemachine.shadowRoot.appendChild(slider);
-    slider = document.createElement('nom-slider');
-    wavemachine.shadowRoot.appendChild(slider);
+    //slider = document.createElement('nom-slider');
+    //wavemachine.shadowRoot.appendChild(slider);
 
     controller = document.querySelector("#controller");
     slider = document.createElement('nom-slider');
-    slider.mapToQueryString="wm1";
+    slider.mapToQuerySelector="#wm1";
+    removeChildren(controller);
     controller.appendChild(slider);
 })
 
+// delete all children
+removeChildren = (parent) => {
+    while (parent.firstChild) {
+       parent.removeChild(parent.firstChild);
+    }
+}
 /* Notes:
     function updatePendulum(evt){
        wavemachine.getRange(0).value=1024*evt.target.value;
        wavemachine.getRange(0).dispatchEvent(new Event('input'));
-    }
-    // delete all children
-    while (parent.firstChild) {
-       parent.removeChild(parent.firstChild);
     }
 */
 </script>

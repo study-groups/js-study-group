@@ -69,6 +69,16 @@ fieldset {
   display:block;
 }
 
+#mapper h3 {
+  margin:0;
+  padding:0; 
+}
+
+nom-mapper: {
+  display:block;
+  border:1px solid red;
+}
+
 footer {
   font-family:monospace;
   background:#bbb;

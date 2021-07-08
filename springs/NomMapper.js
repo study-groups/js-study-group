@@ -12,7 +12,9 @@ class NomMapper extends HTMLElement {
         });
 
         this.addEventListener("mapper", function (evt) {
-            let obj=document.querySelector(evt.detail.querySelector);
+            let qs=evt.detail.mapToQuerySelector;
+            let root = document.querySelector("nom-slider").shadowRoot; 
+            let obj=root.querySelector(evt.detail.mapToQuerySelector);
             let mappedVal =evt.detail.value;
             let sendDetail =    { id: evt.timeStamp, 
                                  type:"slider.set",
@@ -25,8 +27,14 @@ class NomMapper extends HTMLElement {
         });
      }
 
+    connectedCallback(){
+         this.render();
+    }
+
     render(inDetail,outDetail) {
-         this.shadowRoot.innerHTML =
+         //this.shadowRoot.innerHTML ="<h3>Mapper</h3>";
+         this.shadowRoot.innerHTML ="Mapper\n\n";
+         this.shadowRoot.innerHTML +=
              `detailIn: ${JSON.stringify(inDetail,null,4)}\n\n`;
          this.shadowRoot.innerHTML +=
               `detailOut: ${JSON.stringify(outDetail,null,4)}`;

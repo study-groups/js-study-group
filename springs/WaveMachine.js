@@ -30,16 +30,6 @@ class WaveMachine extends HTMLElement {
             </div> </fieldset>`
     } 
 */
-    getRange(n) { 
-        return this.querySelector("fieldset")
-                .children[n].children[1];
-    }
-
-   getDisplay(n) { 
-        return this.querySelector("fieldset")
-                .children[n].children[2];
-    }
-
 }
 
 customElements.define('wave-machine', WaveMachine);

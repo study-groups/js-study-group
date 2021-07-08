@@ -10,7 +10,6 @@ springs-build(){
   cat ./NomMapper.js
   cat ./NomSlider.js
   cat ./bibeats.js
-  cat ./springs.js
   cat ./app.js
   echo "</script>"
   springs-make-footer
@@ -54,8 +53,8 @@ cat <<EOF
       of a bounded sytem to it's <b>period of oscillation</b>. 
     </p>
     <wave-machine id="wave-machine">wavemachine</wave-machine>
-    <value-mapper id="mapper">mapper</value-mapper>
-    <div id="controller"></div>
+    <nom-mapper id="nom-mapper">mapper</nom-mapper>
+    <div id="controller">Controller</div>
 </main>
 EOF
 }
