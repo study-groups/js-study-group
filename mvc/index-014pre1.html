@@ -1,108 +1,148 @@
-<!-- Creates global variable for sharing key/vals. -->
-<html>
+<html >
 <head></head>
-<body id="root">
-<div id="cli"></div>
-<div id="grid"></div>
-
+<body style="padding:1rem;"  id="root">
 <script>
+// Initialize Model
 
-<!-- INITIALIZE -->
- gKvs={};
- gKvs.rows=10;
- gKvs.cols=10;
- gKvs.m=1;
- gKvs.b=0;
+// localstorage.getItem does not return null on iphone
+if(localStorage.getItem("model")===null ||
+   localStorage.getItem("model")===undefined
+    ){
+    let gModel = {
+        cli: {
+            status:"init in gModel",
+            vars: { "rows":10,
+                    "cols":10 ,
+                    m:1,
+                    b:0
+            }
+        },
+        css: {
+            body: {
+                      fontSize:"21pt"
+                  }
+            }
+    };
+    localStorage.setItem("model",JSON.stringify(gModel));
+}
 
-let gModel = {
-  cliComponent: { status:"init in gModel",
-                  vars: {"rows":10, 
-                         "cols":10 ,
-                           m:1,
-                           b:0
-                        }
-                }
-};
+gModel=JSON.parse(localStorage.getItem("model"));
 
+// View components
 function CliComponent(props={status:"cli status"}) {
     return {
         status: props.status,
         submit: handleSubmit,
         render: () => `
-           <div style="font-size:.75rem" id="info">mvc-014pre1</div>
-           <input id="cli">
-           <button onclick='handleSubmit(this);'>update</button>
-           <div id="status">status not set</div>
+             <div style="" >
+                 <div id="info">mvc-014pre1</div>
+                 <input id="cli"
+                        style="font-size:inherit;
+                              vertical-align:middle;"
+                        type="text"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                  >
+                 <button style="vertical-align:middle;
+                      font-size:.5rem"
+                      onclick='handleSubmit(this);'>update
+                 </button>
+                 <div style="font-size:.75rem;
+                     margin:.1rem 0 .5rem 0rem"
+                     id="status">status not set
+                 </div>
+          </div>
+
            <div style="font-family:courier;
                        white-space:pre;
-                       font-size:.75rem" 
-                   id="vars">
-               vars not set
-           </div>
-        `  
+                       font-size:.75rem"
+                   id="vars"> vars not set
+
+           </div>`
    }
 }
 
 // Controller
 function handleSubmit(evt) {
-    let keyVals={};
+    let kvs={}; // key value pairs
+    // TODO: get cliInput from event, may need to make this a form.
     let cliInput=document.getElementById("cli").value;
     let cliTokens=cliInput.split(" ");
-    let cmd = cliTokens[0]; // first is cmd
-    kvs = cliTokens.slice(1); // first is cmd
-    kvs.map( (kv) => keyVals[ kv.split("=")[0] ] 
-                     = kv.split("=")[1]  );
+    let cmd =cliTokens[0]; // first is cmd
+    //kvs = cliTokens.slice(0); // first is cmd
+    cliTokens.map( (kv) =>
+                  kvs[ kv.split("=")[0] ] = kv.split("=")[1] );
 
+   // WRONG! controller should not modify view directly.
+   // Instead, set prop and main updateView() will render props.
    document.getElementById("info").innerHTML=`cmd is ${cmd}`;
+
+    // Model
+    let cli = {...gModel.cli};
+    cli.vars = {...gModel.cli.vars, ...kvs};
+    gModel = {...gModel, cli};
+
     // Business logic
     if( cmd==="create"){ createGrid(); }
 
-    if( cmd==="plot") {
-        document.getElementById("info").innerHTML="cmd === plot";
-        plotLine( gModel.cliComponent.vars.m,
-                  gModel.cliComponent.vars.b); 
+    if( cmd==="updatefont"){
+         gModel.css.body.fontSize = gModel.cli.vars.fontsize;
+    }
+    if( cmd==="reset"){
+         localStorage.removeItem("model"); location.reload()
     }
 
-    // Model
-    let cliComponent = gModel.cliComponent;
-    cliComponent.vars = {...gModel.cliComponent.vars, ...keyVals};
-    gModel = {...gModel, cliComponent}; 
-    
+    if( cmd==="plot") {
+        // View
+        document.getElementById("info").innerHTML="cmd === plot";
+        plotLine( gModel.cli.vars.m,
+                  gModel.cli.vars.b);
+    }
+
+    console.log({gModel});
+    localStorage.setItem("model",JSON.stringify(gModel));
+
     // View
-    document.getElementById("status").innerHTML=cliInput;
-    document.getElementById("vars").
-         innerHTML=JSON.stringify(gModel, null, 4);
+    updateView(gModel);
+}
+
+function updateView(model){
+    // documentElement is <html> root element
+    document.documentElement.style.fontSize=model.css.body.fontSize;
+    document.getElementById("status").innerHTML=model.cli.status;
+    document.getElementById("vars").innerHTML=JSON.stringify(model, null, 4);
 }
 
 function createGrid(){
    grid=document.getElementById("grid").innerHTML="Calculating...";
-   setTimeout( () => { 
-	   //createGridElement("grid",gKvs["rows"],gKvs["cols"]) }, 
-	   createGridElement("grid",gModel.cliComponent.vars.rows,
-                                gModel.cliComponent.vars.cols) }, 
-	   100);
+   setTimeout( () => {
+	   createGridElement("grid",gModel.cli.vars.rows,
+                                gModel.cli.vars.cols) },
+	   500);
 }
 
-function render(rootId){
-
+function render(rootId="root"){
   // Template
   document.getElementById(rootId).innerHTML=
-      ` <div style="float:left; width:50%">
+      `<div style="float:left; min-width:40%">
               ${CliComponent().render()}
         </div>
-        <div  style="float:right;" id="grid"> </div>`;
+        <div  style="float:left;
+                     width:10rem;
+                     height:10rem" id="grid">
+        </div>`;
 
-   // Dynamic   
+   // Dynamic
    createGridElement("grid",
-                    gModel.cliComponent.vars.rows,
-                    gModel.cliComponent.vars.cols);
+                    gModel.cli.vars.rows,
+                    gModel.cli.vars.cols);
+   // CSS
 
- 
-   // CSS 
-
+   updateView(gModel)
 }
 
-render("root"); // Does not include grid or editor
+
 
 function createGridCss(){
   return `
@@ -113,11 +153,10 @@ function createGridCss(){
 
 #grid {
 
-  float:left; 
-  width:15rem; 
-  height:15rem; 
-  margin:2rem;
-  border:1px 
+  width:15rem;
+  height:15rem;
+  margin:0rem;
+  border:1px
   solid red;
 
   display: grid;
@@ -144,43 +183,103 @@ function createGridElement(id,rows,cols){
 
   for (c = 0; c < (rows * cols); c++) {
     let cell = document.createElement("div");
-    //cell.innerText = (c + 1);
     container.appendChild(cell).className = "grid-item";
   };
 }
 
 /*
   y = m * x + b
-
   We want x and y to range from [-.5, .5]
   We want r and c to range from [0, rows] and [0, cols]
 */
 function plotLine(m,b){
-  //const cols=gKvs["cols"];
-  //const rows=gKvs["rows"];
-  const cols=gModel.cliComponent.vars.cols;
-  const rows=gModel.cliComponent.vars.rows;
-
+  const cols=gModel.cli.vars.cols;
+  const rows=gModel.cli.vars.rows;
 
   for(let c=0; c<cols; c++){
     x=c/cols -.49;                     // 0-.5 to 1-.5 ==> -.5 to .5
-    y=parseFloat(m)*x + parseFloat(b); // m=1, b=0     ==> -.5 to .5 
+    y=parseFloat(m)*x + parseFloat(b); // m=1, b=0     ==> -.5 to .5
     r=(y + 0.5)*rows;
     r=Math.ceil(r);
     r= rows-Math.floor(r); // rows to 0
     index= r*rows + c;
     el=document.getElementById("grid").children[index];
     if(typeof(el) != 'undefined' && el != null) {
-      setTimeout( function (col,index) { 
+      setTimeout( function (col,index) {
               el=document.getElementById("grid").children[index];
 	     el.style.background="blue"; }, c*50 + 100, c,index);
     }
   }
 }
 
+document.addEventListener("DOMContentLoaded", function(){
+   render();
+});
+
+// tailspin
+let se=document.createElement('style');
+se.innerHTML=makeMeyerReset();
+document.head.appendChild(se);
+
 se=document.createElement('style');
 se.innerHTML=createGridCss();
 document.head.appendChild(se);
+
+
+function makeMeyerReset(){
+return `
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+div{ border:1px solid blue;
+`;
+}
+
 </script>
 </body>
 <html>
