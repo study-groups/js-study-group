@@ -29,42 +29,48 @@ if(localStorage.getItem("model")===null ||
 gModel=JSON.parse(localStorage.getItem("model"));
 
 // View components
-function CliComponent(props={status:"cli status"}) {
+function CliComponent(submit,props={status:"cli status"}) {
     return {
         status: props.status,
-        submit: handleSubmit,
-        render: () => `
-             <div style="" >
-                 <div id="info">mvc-014pre1</div>
+        postRender: function(){
+            document.getElementById("cliForm").addEventListener(
+                "submit", handleCliSubmit );
+                },
+        render: function (status="no status"){ 
+             return `<form id="cliForm" style="" >
+             <div id="info">mvc-014pre1</div>
                  <input id="cli"
-                        style="font-size:inherit;
-                              vertical-align:middle;"
-                        type="text"
-                        autocomplete="off"
-                        autocorrect="off"
-                        autocapitalize="off"
+                     style="font-size:inherit;
+                        vertical-align:middle;"
+                     type="text"
+                     autocomplete="off"
+                     autocorrect="off"
+                     autocapitalize="off"
                   >
-                 <button style="vertical-align:middle;
+                 <button type="submit" 
+                         id="cliSubmitBtn" style="vertical-align:middle;
                       font-size:.5rem"
-                      onclick='handleSubmit(this);'>update
+                      '> update  <!-- submit takes evt -->
                  </button>
                  <div style="font-size:.75rem;
                      margin:.1rem 0 .5rem 0rem"
-                     id="status">status not set
+                     id="status">${status}
                  </div>
-          </div>
+          </form>
 
            <div style="font-family:courier;
                        white-space:pre;
                        font-size:.75rem"
                    id="vars"> vars not set
 
-           </div>`
+           </div>`;
+           }
    }
 }
 
 // Controller
-function handleSubmit(evt) {
+function handleCliSubmit(evt) {
+    evt.preventDefault();
     let kvs={}; // key value pairs
     // TODO: get cliInput from event, may need to make this a form.
     let cliInput=document.getElementById("cli").value;
@@ -123,10 +129,13 @@ function createGrid(){
 }
 
 function render(rootId="root"){
+
+  let cliComponent=CliComponent(handleCliSubmit);
+
   // Template
   document.getElementById(rootId).innerHTML=
       `<div style="float:left; min-width:40%">
-              ${CliComponent().render()}
+              ${cliComponent.render("init render")}
         </div>
         <div  style="float:left;
                      width:10rem;
@@ -134,6 +143,8 @@ function render(rootId="root"){
         </div>`;
 
    // Dynamic
+   cliComponent.postRender();
+
    createGridElement("grid",
                     gModel.cli.vars.rows,
                     gModel.cli.vars.cols);
