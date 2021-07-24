@@ -2,14 +2,48 @@
 <head>
 <link rel="icon" href="data:;base64,iVBORw0KGgo="> 
 <style>
-div {
-  margin:0;
-  padding:0;
-}
+div { margin:0; padding:0; } /* one line CSS reset */
+html {height:100%; font-size:30pt; }
+body {height:100%; margin:0 0 0 0; padding:0 0 25% 0;}
+main { height:80%;  margin:0; padding:0;}
+header {height:10%; margin:0; padding:0;}
+footer {height:10%; margin:0; padding:0;}
+/* body includes all visible html */
+
 body{
-  margin:0;
   background:#eee;
-  padding:2em;
+  /* flex-direction:column; */
+}
+/* mobile first, fix display, no scrolling when small. */
+html, body{
+    font-size:26pt;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: fixed;
+}
+
+
+/* Desktop */
+@media only screen and (min-width: 720px){
+html{
+  font-size:18pt;
+}
+html, body{
+    position: static;
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+body {
+  background:yellow;
+}
+}
+
+header{
+  background:#ccc;
+}
+/* main is in body, after header, before footer */
+main {
 }
 
 fieldset {
@@ -56,12 +90,13 @@ fieldset {
 
 
 #controller {
-  display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction:row;
   margin:0;
   padding:0;
   width:100%;
+  min-height:100%;
   border: 1px solid green;
 }
 
@@ -84,64 +119,92 @@ nom-mapper: {
 }
 
 footer {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
   font-family:monospace;
-  background:#bbb;
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  position:fixed;
+  bottom:0;
   width:100%;
+  background:#bbb;
   text-align:center;
   height: 2.5rem;           /* Footer height */
 }
+
+
 </style>
 </head>
 <body>
 <main role="main">
-    <h1>Springs: harmonic oscillations</h1>
-    <p>
-      The harmonic oscillator relates <b>mass</b> and <b>restorative force</b>
+    <header>
+      <a href="#wavemachine">Wave Machine</a>
+      <a href="#" onclick="about()">about</a>
+    </header>
+    <p id="about" style="display:none">
+      The <a href="">harmonic oscillator</a> relates 
+      <b>mass</b> and <b>restorative force</b>
       of a bounded sytem to it's <b>period of oscillation</b>. 
     </p>
-    <wave-machine id="wave-machine">wavemachine</wave-machine>
-    <nom-mapper id="nom-mapper">mapper</nom-mapper>
-    <div id="controller">Controller</div>
+    <wave-machine id="wave-machine"> </wave-machine>
+    <nom-mapper id="nom-mapper"> mapper </nom-mapper>
 </main>
+<footer>
+    <div id="controller"> Controller </div>
+</footer>
+</body>
 <script>
+
+function about(){
+  const state=document.getElementById("about").style.display;
+  if(state==="block"){
+     document.getElementById("about").style.display="none";
+  }
+  if(state==="none"){
+     document.getElementById("about").style.display="block";
+  }
+}
+
 class WaveMachine extends HTMLElement {
 
     pendula="notset";
-
+    
     constructor() {
         super();
         this.attachShadow({mode: 'open'});                                      
     }
 
-    connectedCalleback() {
-        init();
+    connectedCallback() {
+        //init();
+        this.shadowRoot.innerHTML=this.createInnerHtml();
+        //this.innerHTML="What up!"  // won't show up!
+        //this.shadowRoot.innerHTML="What up!" 
     }
 
     init(){
-        slider = document.createElement('nom-slider');
+       /* slider = document.createElement('nom-slider');
         slider.className="slider-1";
         slider.value=.5;
         slider.label="slider1";
-        //this.shadowRoot.appendChild(slider);
+ */
     }
-/*
-    createInnerHtml(pendula){
-        return `<fieldset>
+
+   createInnerHtml(pendula=1){
+        return `
+          <fieldset>
             <div class="slider">
-            <label for="rangeVal">freq:</label>
-            <input type ="range" max="1024" min="20"
-                step="1" name="rangeVal" id="101" value="200">
-            </input>
-            <div class="rangeDisplay"></div>
-            </div> </fieldset>`
+              <label for="rangeVal">freq:</label>
+                <input type ="range" max="1024" min="20"
+                  step="1" name="rangeVal" id="wm1" value="200">
+                </input>
+               <div class="rangeDisplay"></div>
+            </div> 
+          </fieldset>`
     } 
-*/
+
 }
 
 customElements.define('wave-machine', WaveMachine);
+
 class NomMapper extends HTMLElement {
     constructor() {
         super();
@@ -176,13 +239,13 @@ class NomMapper extends HTMLElement {
     }
 
     render(inDetail,outDetail) {
-         //this.shadowRoot.innerHTML ="<h3>Mapper</h3>";
-         this.shadowRoot.innerHTML ="Mapper\n\n";
+         this.shadowRoot.innerHTML ="<h2>Mapper</h2>";
          this.shadowRoot.innerHTML +=
-             `detailIn: ${JSON.stringify(inDetail,null,4)}\n\n`;
+             `detailIn:<pre>${JSON.stringify(inDetail,null,4)}</pre>`;
          this.shadowRoot.innerHTML +=
-              `detailOut: ${JSON.stringify(outDetail,null,4)}`;
-    }
+              `outDetail:<pre>${JSON.stringify(outDetail,null,4)}</pre>`;
+         this.shadowRoot.innerHTML += ``;
+     } 
 }
 
 function stringifyEvent(e) {
@@ -198,52 +261,84 @@ function stringifyEvent(e) {
 }
 
 customElements.define('nom-mapper', NomMapper);
+
 class NomSlider extends HTMLElement {
 
     constructor() {
         super();
         this.attachShadow({mode: 'open'}); 
         this.mapToQuerySelector="notyet";
-        this.init();
+
+        this.template = document.createElement('template');
+        this.template.innerHTML = `
+<style>
+:host {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+label {
+ text-align:center;
+  border: 2px solid red;
+  color:red;
+  flex 1 0 auto;
+}
+</style>
+
+  <label></label>
+  <input />
+  <div id="val"><div>
+`;
+
+       this.shadowRoot.appendChild(this.template.content.cloneNode(true));
+       this.init();
     }
 
     connectedCallback(){
     }
-   
+  
+
+ 
     init() {
-        const input = document.createElement('INPUT');
+        //const input = document.createElement('INPUT');
+        const input = this.shadowRoot.querySelector("input"); 
         input.type = 'range';
         input.value = .5;
         input.min =0;
         input.max = 1;
         input.step = .01;
+        input.style.width="80%";
         
-        let label=document.createElement('label')
+        //let label=document.createElement('label')
+        const label = this.shadowRoot.querySelector("label"); 
         label.innerHTML="lfo";
         label.className="label";
 
-        let val=document.createElement('span')
+        //let val=document.createElement('span')
+        const val = this.shadowRoot.querySelector("#val"); 
         val.innerHTML="0 Hz";
         val.className="rangeDisplay";
+        val.style.width="10%";
 
 /* 
 The "input" event is sent by a slider (i.e. input DOM element) 
 that is a child of this NomSlider.
 
-Reach down into children to grab value of the slider (1) and set 
-the value display of this slider to reflect current value.
-Should be via inputToValue().
+Reach down into children to grab value of the slider (children[1]) 
+and set the value (children[2]) display of this slider to reflect
+current value. Should be via inputToValue().
 
 Then send a custom event to the Mapper informing the mapper 
 that this slider is changing. This is done by passing a custom
 object as the 'detail' item. The detail item is part of the DOM
 specification and is how NOM (node object model) objects are passed
-between componentents.
+between components.
 */
     this.addEventListener("input", (evt) => { 
         // self reflection
         this.shadowRoot.children[2].innerHTML=
-        this.shadowRoot.children[1].value;
+            this.shadowRoot.children[1].value;
 
         // mapToQuerySelector was set when another slider was created.
         // This is what we want mapper to call in the mapper listener.
@@ -258,31 +353,24 @@ between componentents.
                    }
               }));
         });                                                                       
-        this.shadowRoot.appendChild(label);  // children[0]
-        this.shadowRoot.appendChild(input);  // children[1]
-        this.shadowRoot.appendChild(val);    // children[2]
+        // this.shadowRoot.appendChild(label);  // children[0]
+        // this.shadowRoot.appendChild(input);  // children[1]
+        // this.shadowRoot.appendChild(val);    // children[2]
+
+
+    
+
 
         this.addEventListener( "slider.set", function() {
             this.shadowRoot[1].value=evt.detail.value;
         });
     }
 
-    set value(v) { this.shadowRoot.children[2].innerHTML=v };
-
-
-    set id(v) {   this.setAttribute('id', v);}
-
-//    set mapToQuerySelector(str) { 
-//        this.mapToQuerySelector=str;
-//    }
-
-    get value() {
-         return this.shadowRoot.children[1].value;
-    }
-
-    set label(v) {
-        this.shadowRoot.children[0].innerHTML=v;
-    }
+    set value(v) { this.shadowRoot.children[2].innerHTML=v;}
+    set id(v) { this.setAttribute('id', v);}
+    get value() { return this.shadowRoot.children[1].value; }
+    set label(v) { this.shadowRoot.children[0].innerHTML=v;}
+//  set mapToQuerySelector(str){ this.mapToQuerySelector=str; }
 
 }
 
@@ -381,15 +469,19 @@ function BiBeat() {
 window.addEventListener('load', () => {
     // wavemachine is collection of oscilators with silders
     const wavemachine = document.getElementById("wave-machine");
-
+/*
     slider = document.createElement('nom-slider');
     slider.label="wm1";
     slider.id="wm1";
     slider.shadowRoot.id="wm1";
     wavemachine.shadowRoot.appendChild(slider);
-    //slider = document.createElement('nom-slider');
-    //wavemachine.shadowRoot.appendChild(slider);
 
+    slider = document.createElement('nom-slider');
+    slider.label="wm2";
+    slider.id="wm2";
+    slider.shadowRoot.id="wm2";
+    wavemachine.shadowRoot.appendChild(slider);
+*/
     controller = document.querySelector("#controller");
     slider = document.createElement('nom-slider');
     slider.mapToQuerySelector="#wm1";
@@ -410,8 +502,4 @@ removeChildren = (parent) => {
     }
 */
 </script>
-</body>
-<footer>
-
-</footer>
 </html>
