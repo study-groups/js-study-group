@@ -3,39 +3,50 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo="> 
 <style>
 div { margin:0; padding:0; } /* one line CSS reset */
-html {height:100%; font-size:30pt; }
-body {height:100%; margin:0 0 0 0; padding:0 0 25% 0;}
-main { height:80%;  margin:0; padding:0;}
-header {height:10%; margin:0; padding:0;}
+html {height:100%;}
+body {height:100%; width:100%; margin:0 0 0 0; padding:0 0 0 0;}
+main { height:100%;  margin:0; padding:0;}
+header {height:2rem; min-width:100%; margin:0; padding:0;}
+nav {height:2rem; width:100%; margin:0; padding:0;}
 footer {height:10%; margin:0; padding:0;}
 /* body includes all visible html */
 
+nav{
+  text-align:center;
+}
+nav a, a:visited{
+  text-decoration:none;
+  color:blue;
+  
+}
+
 body{
   background:#eee;
-  /* flex-direction:column; */
+   overflow: hidden;
 }
 /* mobile first, fix display, no scrolling when small. */
-html, body{
+html{
     font-size:26pt;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    position: fixed;
+    width:100%;
 }
 
+body,
+html {
+  position: fixed;
+  overflow:hidden;
+}
 
 /* Desktop */
-@media only screen and (min-width: 720px){
+@media only screen and (min-width: 600px){
 html{
-  font-size:18pt;
-}
-html, body{
-    position: static;
-  overflow-x: visible;
-  overflow-y: visible;
+    font-size:20pt;
 }
 
 body {
-  background:yellow;
+  overflow:scroll;
+  position:static;
+  margin-bottom:2rem;
+  background:green;
 }
 }
 
@@ -135,32 +146,37 @@ footer {
 </style>
 </head>
 <body>
-<main role="main">
     <header>
-      <a href="#wavemachine">Wave Machine</a>
-      <a href="#" onclick="about()">about</a>
+      <nav>
+        <a href="#wavemachine">WaveMachine</a> | 
+        <a href="#" onclick="about()">about</a>
+      </nav>
+
     </header>
-    <p id="about" style="display:none">
+    <p id="about" style="display:none; margin:1rem">
       The <a href="">harmonic oscillator</a> relates 
       <b>mass</b> and <b>restorative force</b>
       of a bounded sytem to it's <b>period of oscillation</b>. 
     </p>
-    <wave-machine id="wave-machine"> </wave-machine>
-    <nom-mapper id="nom-mapper"> mapper </nom-mapper>
-</main>
-<footer>
-    <div id="controller"> Controller </div>
-</footer>
+    <main role="main">
+        <wave-machine id="wave-machine"> </wave-machine>
+        <nom-mapper id="nom-mapper"> mapper </nom-mapper>
+    </main>
+    <footer>
+        <div id="controller"> Controller </div>
+    </footer>
 </body>
 <script>
 
 function about(){
   const state=document.getElementById("about").style.display;
   if(state==="block"){
-     document.getElementById("about").style.display="none";
+     document.querySelector("#about").style.display="none";
+     document.querySelector("main").style.display="block";
   }
   if(state==="none"){
-     document.getElementById("about").style.display="block";
+     document.querySelector("#about").style.display="block";
+     document.querySelector("main").style.display="none";
   }
 }
 
@@ -297,8 +313,6 @@ label {
 
     connectedCallback(){
     }
-  
-
  
     init() {
         //const input = document.createElement('INPUT');
@@ -356,10 +370,6 @@ between components.
         // this.shadowRoot.appendChild(label);  // children[0]
         // this.shadowRoot.appendChild(input);  // children[1]
         // this.shadowRoot.appendChild(val);    // children[2]
-
-
-    
-
 
         this.addEventListener( "slider.set", function() {
             this.shadowRoot[1].value=evt.detail.value;
