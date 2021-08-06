@@ -36,7 +36,7 @@ function CliComponent(submit,props={status:"cli status"}) {
             document.getElementById("cliForm").addEventListener(
                 "submit", handleCliSubmit );
                 },
-        render: function (status="no status"){ 
+        render: function (status="no status"){
              return `<form id="cliForm" style="" >
              <div id="info">mvc-014pre1</div>
                  <input id="cli"
@@ -47,7 +47,7 @@ function CliComponent(submit,props={status:"cli status"}) {
                      autocorrect="off"
                      autocapitalize="off"
                   >
-                 <button type="submit" 
+                 <button type="submit"
                          id="cliSubmitBtn" style="vertical-align:middle;
                       font-size:.5rem"
                       '> update  <!-- submit takes evt -->
@@ -67,6 +67,138 @@ function CliComponent(submit,props={status:"cli status"}) {
            }
    }
 }
+
+function GridComponent(props={rows:"10", cols:"10"}) {
+    return {
+        props: props,
+        render: function (){
+             return `<form id="cliForm" style="" >
+             <div id="info">mvc-014pre1</div>
+                 <div style="font-size:.75rem;
+                     margin:.1rem 0 .5rem 0rem"
+                     id="status">${status}
+                 </div>
+          </form>
+
+           <div style="font-family:courier;
+                       white-space:pre;
+                       font-size:.75rem"
+                   id="vars"> vars not set
+
+           </div>`;
+           }
+   }
+}
+
+function updateView(model){
+    // documentElement is <html> root element
+    document.documentElement.style.fontSize=model.css.body.fontSize;
+    document.getElementById("status").innerHTML=model.cli.status;
+    document.getElementById("vars").innerHTML=JSON.stringify(model, null, 4);
+}
+
+function createGrid(rows=10,cols=10){
+   grid=document.getElementById("grid").innerHTML="Calculating...";
+   setTimeout( () => {
+	   createGridElement("grid",gModel.cli.vars.rows,
+                                gModel.cli.vars.cols) },
+	   500);
+}
+
+function render(rootId="root"){
+
+  let cliComponent=CliComponent(handleCliSubmit);
+
+  // Template
+  // Component.render(): when, not what.
+  document.getElementById(rootId).innerHTML=
+      `<div style="float:left; min-width:40%">
+              ${cliComponent.render()}
+        </div>
+        <div  style="float:left;
+                     width:10rem;
+                     height:10rem" id="grid">
+        </div>`;
+
+   // Dynamic
+   cliComponent.postRender();
+
+   createGridElement("grid",
+                    gModel.cli.vars.rows,
+                    gModel.cli.vars.cols);
+
+   updateView(gModel)
+}
+
+
+function createGridElementOrig(id,rows,cols){
+
+  container = document.getElementById(id);
+  container.textContent="";
+  container.style.setProperty('--grid-rows', rows);
+  container.style.setProperty('--grid-cols', cols);
+
+  for (c = 0; c < (rows * cols); c++) {
+    let cell = document.createElement("div");
+    container.appendChild(cell).className = "grid-item";
+  };
+}
+
+
+function createGridElement(rows,cols){
+  container = document.createElement("div");
+  container.textContent="";
+  container.style.setProperty('--grid-rows', rows);
+  container.style.setProperty('--grid-cols', cols);
+
+  for (c = 0; c < (rows * cols); c++) {
+    let cell = document.createElement("div");
+    container.appendChild(cell).className = "grid-item";
+  };
+
+  return container;
+}
+
+/*
+  y = m * x + b
+  We want x and y to range from [-.5, .5]
+  We want r and c to range from [0, rows] and [0, cols]
+*/
+function plotLine(m,b){
+  const cols=gModel.cli.vars.cols;
+  const rows=gModel.cli.vars.rows;
+
+  for(let c=0; c<cols; c++){
+    x=c/cols -.49;                     // 0-.5 to 1-.5 ==> -.5 to .5
+    y=parseFloat(m)*x + parseFloat(b); // m=1, b=0     ==> -.5 to .5
+    r=(y + 0.5)*rows;
+    r=Math.ceil(r);
+    r= rows-Math.floor(r); // rows to 0
+    index= r*rows + c;
+    el=document.getElementById("grid").children[index];
+    if(typeof(el) != 'undefined' && el != null) {
+      setTimeout( function (col,index) {
+              el=document.getElementById("grid").children[index];
+	     el.style.background="blue"; }, c*50 + 100, c,index);
+    }
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+   render();
+});
+
+// tailspin
+let se=document.createElement('style');
+se.innerHTML=makeMeyerReset();
+document.head.appendChild(se);
+
+se=document.createElement('style');
+se.innerHTML=createGridCss();
+document.head.appendChild(se);
+
+
+
 
 // Controller
 function handleCliSubmit(evt) {
@@ -113,48 +245,6 @@ function handleCliSubmit(evt) {
     updateView(gModel);
 }
 
-function updateView(model){
-    // documentElement is <html> root element
-    document.documentElement.style.fontSize=model.css.body.fontSize;
-    document.getElementById("status").innerHTML=model.cli.status;
-    document.getElementById("vars").innerHTML=JSON.stringify(model, null, 4);
-}
-
-function createGrid(){
-   grid=document.getElementById("grid").innerHTML="Calculating...";
-   setTimeout( () => {
-	   createGridElement("grid",gModel.cli.vars.rows,
-                                gModel.cli.vars.cols) },
-	   500);
-}
-
-function render(rootId="root"){
-
-  let cliComponent=CliComponent(handleCliSubmit);
-
-  // Template
-  document.getElementById(rootId).innerHTML=
-      `<div style="float:left; min-width:40%">
-              ${cliComponent.render("init render")}
-        </div>
-        <div  style="float:left;
-                     width:10rem;
-                     height:10rem" id="grid">
-        </div>`;
-
-   // Dynamic
-   cliComponent.postRender();
-
-   createGridElement("grid",
-                    gModel.cli.vars.rows,
-                    gModel.cli.vars.cols);
-   // CSS
-
-   updateView(gModel)
-}
-
-
-
 function createGridCss(){
   return `
 :root {
@@ -163,13 +253,10 @@ function createGridCss(){
 }
 
 #grid {
-
-  width:15rem;
-  height:15rem;
-  margin:0rem;
-  border:1px
-  solid red;
-
+  width:5rem;
+  height:5rem;
+  margin:1rem;
+  border:1px solid red;
   display: grid;
   grid-template-rows: repeat(var(--grid-rows), 1fr);
   grid-template-columns: repeat(var(--grid-cols), 1fr);
@@ -184,58 +271,6 @@ function createGridCss(){
 }
   `;
 }
-
-function createGridElement(id,rows,cols){
-
-  container = document.getElementById(id);
-  container.textContent="";
-  container.style.setProperty('--grid-rows', rows);
-  container.style.setProperty('--grid-cols', cols);
-
-  for (c = 0; c < (rows * cols); c++) {
-    let cell = document.createElement("div");
-    container.appendChild(cell).className = "grid-item";
-  };
-}
-
-/*
-  y = m * x + b
-  We want x and y to range from [-.5, .5]
-  We want r and c to range from [0, rows] and [0, cols]
-*/
-function plotLine(m,b){
-  const cols=gModel.cli.vars.cols;
-  const rows=gModel.cli.vars.rows;
-
-  for(let c=0; c<cols; c++){
-    x=c/cols -.49;                     // 0-.5 to 1-.5 ==> -.5 to .5
-    y=parseFloat(m)*x + parseFloat(b); // m=1, b=0     ==> -.5 to .5
-    r=(y + 0.5)*rows;
-    r=Math.ceil(r);
-    r= rows-Math.floor(r); // rows to 0
-    index= r*rows + c;
-    el=document.getElementById("grid").children[index];
-    if(typeof(el) != 'undefined' && el != null) {
-      setTimeout( function (col,index) {
-              el=document.getElementById("grid").children[index];
-	     el.style.background="blue"; }, c*50 + 100, c,index);
-    }
-  }
-}
-
-document.addEventListener("DOMContentLoaded", function(){
-   render();
-});
-
-// tailspin
-let se=document.createElement('style');
-se.innerHTML=makeMeyerReset();
-document.head.appendChild(se);
-
-se=document.createElement('style');
-se.innerHTML=createGridCss();
-document.head.appendChild(se);
-
 
 function makeMeyerReset(){
 return `
