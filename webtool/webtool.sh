@@ -1,13 +1,17 @@
 #!/bin/bash
-
-webtool-hello() {
-  echo "hello"
-}
-
 node="/snap/bin/node"
 node_server="/home/admin/src/js-study-group/webtool/node-server.js"
+
+webtool-build-hook(){
+  echo "Webtool using default webtool-build-hook " > /dev/stderr
+  echo "Define webtool-build-hook in your script to override. " > /dev/stderr
+  echo "Typically used to automatically rebuild index.html. " > /dev/stderr
+  echo "Or ignore and manually run your " > /dev/stderr
+  echo "app-build function before starting webtool-server. " > /dev/stderr
+}
+
 webtool-node-server() {
-  webtool-build-hook
+  # webtool-build-hook
   # $1: file to run
   # $@: additional args (port, html_path, json_path)
   $node $node_server "${@:1}"
@@ -49,9 +53,6 @@ webtool-server-nc(){
   done
 }
 
-webtool-build-hook(){
-  echo "override this function" > /dev/stderr
-}
 
 webtool-make-header(){
   # This uses Bash's Heredoc syntax of <<WORD to specify stdio
