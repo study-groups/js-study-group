@@ -26,7 +26,7 @@ body{
   overflow: hidden;
 }
 html{
-  font-size:24pt;
+  font-size:22pt; /* No smaller than 22pt! 24pt maybe better. */
   width:100%;
 }
 body,
@@ -35,6 +35,38 @@ html {
   overflow:hidden;
 }
 
+header{
+  background:#ccc;
+}
+/* main is in body, after header, before footer */
+main {
+}
+
+#controller {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction:column;
+  flex-direction:row;
+  width:100%;
+  height:100%;
+  /* this stretches contained element to fit
+  height:100%;
+  */
+}
+
+nom-slider{
+  border: 2px solid purple;
+}
+
+footer {
+  position:fixed;
+  bottom:0; /*cuts off bottom border of child */
+  width:100%;
+  background:#bbb;
+  text-align:center;
+  height: 2.0rem;           /* Footer height */
+}
 /* Desktop */
 @media only screen and (min-width: 600px){
     html{
@@ -47,48 +79,6 @@ html {
         margin-bottom:2rem;
         background:green;
     }
-}
-
-header{
-  background:#ccc;
-}
-/* main is in body, after header, before footer */
-main {
-}
-
-.wavemachine{
-  display: flex;
-  align-items: center;
-  flex-direction:column;
-  margin:0;
-  padding:0;
-  justify-content: center;
-  border: 1px solid blue;
-  width:100%;
-}
-
-#controller {
-  align-items: center;
-  justify-content: center;
-  flex-direction:row;
-  margin:0;
-  padding:0;
-  width:100%;
-  min-height:100%;
-  border: 1px solid green;
-}
-
-footer {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-family:monospace;
-  position:fixed;
-  bottom:0;
-  width:100%;
-  background:#bbb;
-  text-align:center;
-  height: 2.5rem;           /* Footer height */
 }
 
 
@@ -141,8 +131,14 @@ attribute reflection
 </div> <!-- id="about"-->
     <main role="main">
         <wave-machine id="wave-machine">
-            <nom-slider id="wm1" label="carrier" slot="nom-oscillator"></nom-slider>
-            <nom-slider id="wm2" label="delta" slot="nom-oscillator"></nom-slider>
+            <nom-slider id="wm1" 
+                        label="freq" 
+                        slot="nom-oscillator">
+            </nom-slider>
+            <nom-slider id="wm2" 
+                        label="delta"
+                        slot="nom-oscillator">
+            </nom-slider>
         </wave-machine>
         <nom-mapper id="nom-mapper"> 
         </nom-mapper>
@@ -151,7 +147,8 @@ attribute reflection
         <div id="controller">
              <nom-slider id="controller" 
                          label="A"
-                         mapToQuerySelector="#wm2"></nom-slider>
+                         mapToQuerySelector="#wm2">
+             </nom-slider>
         </div>
     </footer>
 </body>
@@ -187,18 +184,19 @@ class WaveMachine extends HTMLElement {
 <style>
 :host {
   display:flex;
-  flex-direction: column;
-  justify-content: center;
-  justify-content: space-between;
+  flex-direction: column;   /* main axis is verticle (up and down) */
+  justify-content: center; /* main axis: direction=column -> up/down */
+  align-items: center; /* cross axis: left/right */
   border: 2px solid lime;
 }
 
 ::slotted(*), :host > * {
   text-align:center;
   border: 2px solid blue;
-  width:45%;
-  flex 1 0 auto;
+  width:100%;
 }
+
+
 
 #nom-oscillator::host(*) {
   background-color:orange;
@@ -253,16 +251,15 @@ class NomMapper extends HTMLElement {
   display:flex;
   flex-direction:column; 
   justify-content: center;
-  border: 2px solid yellow;
+  border: 2px solid blue;
 }
 
 :host > * {
  text-align:center;
-  border: 2px solid blue;
+  border: 2px solid orange;
   min-width:100%;
-  font-size:smaller;
+  font-size:.8rem;
   font-family:monospace;
-  flex 0 0 auto;
 }
 </style>
 <slot id="nom-map">
@@ -317,21 +314,30 @@ class NomSlider extends HTMLElement {
   flex-direction: row;
   justify-content: space-between;
   font-size:.7rem;
+  line-height:1.1rem;
+  min-height:1.5rem;
+  font-weight:bold;
+  font-family:monospace;
   color:blue;
+  display:flex;
+  justify-content: center; /* main axis: direction=column -> up/down */
+  align-items: center; /* cross axis: left/right */
 }
 label {
  text-align:center;
   border: 2px solid red;
   color:red;
-  min-width:15%;
+  padding-left:.2rem;
+  margin-left:.2rem;
+  min-width:20%;
+  max-height:1.1rem;
   flex 1 0 auto;
 }
 input {
   margin-left:.5rem;
-  width:90%;
+  width:80%;
 }
 .val{
-  line-height:1rem;
   min-width:15%;
 }
 
