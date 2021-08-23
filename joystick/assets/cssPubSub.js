@@ -1,10 +1,11 @@
 function CssPubSub(){
+    subs=[];
     return {
-        subscribe:function(){
-            alert("publish");
+        subscribe:function(el,prop){
+            subs[el]=prop;
         },
         publish:function(){
-            alert("publish");
+            alert(`publish ${subs[0]}`);
 	}
     }
 }

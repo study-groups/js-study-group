@@ -1,5 +1,5 @@
 source ~/src/js-study-group/webtool/webtool.sh
-webtool-build-joystick(){
+build-joystick(){
 
   # sketch.svg is cut-and-paste out of Stylus Lab's Write app.
   export sketch_component=$(cat assets/sketch.svg); 
@@ -21,7 +21,7 @@ webtool-build-joystick(){
   # .env.html implies a file that has environment vars in it
   # envsubst replaces Bash environment variables (e.g. 
   # sketch_component and heart_component).
-  cat  index.env.html | envsubst 
+  cat  index.env | envsubst 
 }
 
 joystick-help(){

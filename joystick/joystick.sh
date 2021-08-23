@@ -1,4 +1,4 @@
-WS_HOST=lenan.net
+WS_HOST=study-groups.org
 WS_PORT=9200
 
 joystick-connect(){
