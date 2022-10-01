@@ -1,8 +1,6 @@
 # js-study-group
 Asynchronous JavaScript, mainly front-end.
 
-# Files in js-study-group
-
 | File | info |
 |---|---|
 |js.sh | Tools for installing and using JSON, NVM, NodeJs and Express | 
