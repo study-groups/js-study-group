@@ -1,0 +1,94 @@
+<script type="text/babel">
+    
+function DashboardCli() {
+
+    const [text, setText] = React.useState("");
+    // single - the input is interpreted as a single string
+    // each - the input is interpreted as each word 
+    // and sent in an array
+    const [option, setOption] = React.useState("single");
+const [analysis, setAnalysis] = React.useState("");
+
+    function handleOption(e) {
+        setOption(e.target.value);
+    }   
+
+    // submit entire text string for single analysis
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        // Response: { data: Sentiment | Sentiment[] } 
+        // pulls sentiment from the data object
+
+        if (option === "single") {
+        const { data: { sentiment } } = await axios.post(
+            // POST Request
+            API,
+            { data: text }
+        );
+    setAnalysis(sentiment);
+        return;
+        }
+
+        if (option === "each") {
+        const { data: { sentiment } } = await axios.post(
+                // POST Request
+    API,
+    { data: text.split(" ") }
+    );
+
+    setAnalysis(sentiment);
+    return;
+
+        }
+
+    }
+        
+    function handleChange(e) {
+        setText(e.target.value);
+    }
+
+    return (
+<div>
+   
+            <form
+            onSubmit={handleSubmit}
+            >
+        <label style={displayBlock}>
+                Analyzed as single text string
+                <input 
+                type="radio" 
+                value="single"
+                checked={option === "single"}
+                onChange={handleOption}
+                />
+            </label>
+        <label style={displayBlock}>
+                Analyzed per word
+                <input 
+                type="radio"
+                value="each"
+                checked={option === "each"}
+                onChange={handleOption}
+                />
+            </label>
+            <input 
+                type="text"
+                value={text}
+                onChange={handleChange}
+            />
+            <input type="submit" value="Analyze" />
+            <button onClick={() => setText("")}>Clear</button>
+            </form>
+    <div>
+        {
+        typeof(analysis) === "string" 
+            ? analysis 
+        : analysis.join(", ")
+    }
+    </div>
+</div>
+    );
+}
+
+</script>

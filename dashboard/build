@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Get snippets of html, store strings as env vars, HEAD and BODY
+CLIENT_DIR="client"
+export HEAD="$(cd $CLIENT_DIR && cat head.html cli.html)"
+export BODY="$(cd $CLIENT_DIR && cat  body.html)"
+
+# Write to public dir that is is served by node server.js
+PUBLIC_DIR="public"
+mkdir -p $PUBLIC_DIR 
+cat $CLIENT_DIR/index.env | envsubst  > $PUBLIC_DIR/index.html

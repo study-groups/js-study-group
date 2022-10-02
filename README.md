@@ -1,7 +1,7 @@
 # js-study-group
 Asynchronous JavaScript, mainly front-end.
 
-| File | info |
+| file | info |
 |---|---|
 |js.sh | Tools for installing and using JSON, NVM, NodeJs and Express | 
 |flashcard | Minimal React app without node_modules |
