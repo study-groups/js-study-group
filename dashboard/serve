@@ -5,5 +5,6 @@ export PORT=5555
 node server/server.js
 
 SERVER_ROOT="./public"
-xdg-open $SERVER_ROOT/index.html
+#xdg-open $SERVER_ROOT/index.html
+open http://$HOST:$PORT
 

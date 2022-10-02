@@ -1,8 +1,9 @@
 #!/bin/bash
-
 # Get snippets of html, store strings as env vars, HEAD and BODY
 CLIENT_DIR="client"
-export HEAD="$(cd $CLIENT_DIR && cat head.html cli.html)"
+export CSS="$(cd $CLIENT_DIR && cat style.css)"
+export HEAD="$(cd $CLIENT_DIR && \
+  cat head.html cli.html terminal.html)"
 export BODY="$(cd $CLIENT_DIR && cat  body.html)"
 
 # Write to public dir that is is served by node server.js
