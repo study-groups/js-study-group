@@ -7,7 +7,8 @@ const { spawn } = require("child_process"); // neither used
 const PORT = process.argv[2] 
 const HTML_PATH = process.argv[3]
 const JSON_DIR = process.argv[4]
-const SERVER_IP = "0.0.0.0"; // catch all network interface
+//const SERVER_IP = "0.0.0.0"; // catch all network interface
+const SERVER_IP = "127.0.0.1"; // catch all network interface
 
 const server = http.createServer( function(req, res) {
     // From https://nodejs.org/docs/guides/anatomy-of-an-http-transaction
@@ -39,10 +40,10 @@ const server = http.createServer( function(req, res) {
     // /json?min=0&max=20
     if (req.method === 'GET' && path === '/json') {
         res.writeHead(200, {"Content-Type": "application/json"});
-        //res.writeHead(200, {"Content-Type": "text/plain;"});
 
         // in future call spawn and get stdio from webtool-json-hook 
-        // figure out how to specify which hook to use where "/json-hook" is currently located manually  
+        // figure out how to specify which hook to use where 
+        // "/json-hook" is currently located manually  
         // req vars passed to json-hook file
         
         // random number generated between 1 and max
@@ -64,43 +65,21 @@ const server = http.createServer( function(req, res) {
         );
 
         //pipeline.stdout.on("data", function(data) {
-            //console.log("data to send to client: ", data.toString());
+        //console.log("data to send to client: ", data.toString());
         //});
 
-        pipeline.stderr.on("data", (err) => console.error(Buffer.from(err).toString()));
-        //pipeline.stderr.on("data", (err) => console.log("Error: ", err))
-        //pipeline.stderr.on("data", 
-        //    (err) => console.log("stderr:\n",Buffer.from(err).toString()))
+        pipeline.stderr.on("data", 
+             (err) => console.error(Buffer.from(err).toString()));
         
-        // pipes stdout of process to client
-        pipeline.stdout.pipe(res);
+        pipeline.stdout.pipe(res); // pipes stdout of process to client
     }
-/*
-    if (req.method === 'GET' && req.url === '/json-file') {
-        res.writeHead(200, {"Content-Type": "application/json"});
-        fs.readFile(JSON_PATH, function(err, data) {
-        //pipeline.stderr.on("data", 
-        //    (err) => console.log("stderr:\n",Buffer.from(err).toString()))
-        
-        // pipes stdout of process to client
-        pipeline.stdout.pipe(res);
-    }
-
-    if (req.method === 'GET' && req.url === '/json-file') {
-        res.writeHead(200, {"Content-Type": "application/json"});
-        fs.readFile(JSON_PATH, function(err, data) {
-            if (err) {
-                throw err;
-            }
-            res.end(data);
-        }); 
-    }
-*/
 });
 
 server.listen(PORT, SERVER_IP);
 console.log(`Node application running on ${SERVER_IP}:${PORT}`);
+
 const hostname = spawn("hostname", ["-I"]);
+
 hostname.stdout.on("data", function(data) {
     const { HTML_PORT } = process.env;
     console.log(

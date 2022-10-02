@@ -1,6 +1,7 @@
 #!/bin/bash
-node="/snap/bin/node"
-node_index="/home/admin/src/js-study-group/node-server/index.js"
+#node="/snap/bin/node"
+node="node"
+node_server="$HOME/src/js-study-group/webtool/node-server.js"
 
 webtool-build-hook(){
   echo "Webtool using default webtool-build-hook " > /dev/stderr
