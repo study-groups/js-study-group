@@ -43,8 +43,7 @@ js-nvm-install(){
   ver=${1:-"v0.39.1"}
   echo "Using nvm: $ver"
   echo "Find latest here  https://github.com/nvm-sh/nvm/releases"
-  curl 'https://raw.githubusercontent.com/nvm-sh/nvm/$ver/install.sh' \
-      | bash
+  curl "https://raw.githubusercontent.com/nvm-sh/nvm/$ver/install.sh"  | bash
   nvm install 'lts/*'
 }
 
