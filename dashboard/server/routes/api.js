@@ -2,8 +2,8 @@ import express from "express";
 const router = express.Router();
 import path from "path";
 
-// http://IP:PORT/tsd
-router.get("/tsd", function(req, res, next) {
+// http://IP:PORT/api
+router.get("/", function(req, res, next) {
     res.sendFile("tsd.html", {root: path.join(__dirname, "./public")})    
 });
 
