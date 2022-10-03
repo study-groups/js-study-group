@@ -22,12 +22,16 @@ app.use(cookieParser());
 app.use("/", express.static('public')) 
 app.use("/api", apiRouter);
 
+const port=process.argv[2];
+const host=process.argv[3] || "localhost";
+
 // This method is identical to Node’s http.Server.listen().
-const server = app.listen(process.env.PORT, process.env.HOST, function() {
-    const host = server.address().address;
-    const port = server.address().port;
+//const server = app.listen(process.env.PORT, process.env.HOST, function() {
+const server = app.listen(port, host, function() {
+    const actualHost = server.address().address;
+    const actualPort= server.address().port;
     console.log({host, port});  
-    console.log(`Dashboard listening on http://${host}:${port}`);
-})
+    console.log(`Dashboard listening on http://${actualHost}:${actualPort}`);
+});
 
 //export default Object.freeze(app);

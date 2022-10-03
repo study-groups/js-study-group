@@ -12,8 +12,9 @@ router.get("/", function(req, res, next) {
     res.end(JSON.stringify( {data:"testing"} ));
 });
 
-router.get("/a", function (req, res) {
-    res.json({"cmd": "a working"});
+
+router.get("/json-hook", function (req, res) {
+    res.json({"json-hook": "a working"});
 });
 
 export default router;

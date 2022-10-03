@@ -1,0 +1,5 @@
+#!/bin/bash
+oldpwd=$PWD
+cd server
+npm i
+cd $oldpwd

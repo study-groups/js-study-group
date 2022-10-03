@@ -1,0 +1,8 @@
+# source this file in current shell
+kill $(cat pid)
+echo "$(date +%s): starting server on $HOST:$PORT"
+nodemon server/server.js 5556 localhost
+echo $! > pid
+
+# > log.txt &
+#tail -f log.txt

@@ -1,0 +1,12 @@
+{
+  "watch": ["server", "client"],
+  "ignore": [ 
+    ".git", 
+    "node_modules/**/node_modules"
+  ],
+  "events": {
+    "restart": "./build-client"
+  },
+  "ext": "html, js",
+  "delay": "500ms"
+}

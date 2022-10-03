@@ -10,3 +10,9 @@ export BODY="$(cd $CLIENT_DIR && cat  body.html)"
 PUBLIC_DIR="public"
 mkdir -p $PUBLIC_DIR 
 cat $CLIENT_DIR/index.env | envsubst  > $PUBLIC_DIR/index.html
+#!/bin/bash
+
+oldpwd=$PWD
+cd server
+npm i
+cd $oldpwd

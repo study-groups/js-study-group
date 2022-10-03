@@ -7,9 +7,9 @@ const content=`
 function App() {
     const [out, setOut] = React.useState("out Default");
     return (
-        <div>
+        <div> 
             <ReactMarkdown>{"# Dashboard"}</ReactMarkdown>
-            <Cli text={out} setText={setOut} />
+            <Cli text={out} setText={setOut}  />
             <Terminal text={out}/>
             <ReactMarkdown>{content}</ReactMarkdown>
 
@@ -19,4 +19,3 @@ function App() {
 const mountPoint = document.getElementById("root");
 ReactDOM.render(<App />, mountPoint);
 </script>
-

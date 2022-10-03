@@ -47,3 +47,12 @@ js-nvm-install(){
   nvm install 'lts/*'
 }
 
+js-iwatch-install(){
+ sudo apt-get install inotify-tools
+}
+
+## dirToWatch rest is the command
+js-watch(){
+  while inotifywait --exclude .swp -e modify -r $1; do ${@:2}; done;
+}
+
