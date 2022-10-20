@@ -1,18 +1,22 @@
 #!/bin/bash
 # Get snippets of html, store strings as env vars, HEAD and BODY
-CLIENT_DIR="client"
-export CSS="$(cd $CLIENT_DIR && cat style.css)"
-export HEAD="$(cd $CLIENT_DIR && \
-  cat head.html cli.html terminal.html)"
-export BODY="$(cd $CLIENT_DIR && cat  body.html)"
+orig_pwd="$(readlink -f $PWD)"
+export HOST="localhost"
+export PORT="6777"
+APIURL_JS="$(echo "const APIURL=\"http://$HOST:$PORT/api\"")"
 
-# Write to public dir that is is served by node server.js
-PUBLIC_DIR="public"
-mkdir -p $PUBLIC_DIR 
-cat $CLIENT_DIR/index.env | envsubst  > $PUBLIC_DIR/index.html
-#!/bin/bash
+cd client
 
-oldpwd=$PWD
-cd server
-npm i
-cd $oldpwd
+cat<<EOF > globals.html
+<script>
+const APIURL="http://$HOST:$PORT/api"
+</script>
+EOF
+
+export CSS="$(cat style.css tachyons.min.css)"
+export HEAD="$(cat head.html cli.html terminal.html)"
+export BODY="$(cat  globals.html body.html)"
+
+cd $orig_pwd
+mkdir -p public 
+cat client/index.env | envsubst  > public/index.html

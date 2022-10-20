@@ -13,7 +13,6 @@
 ></script>
 <script
     crossorigin
-
     src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
 ></script>
 
@@ -34,35 +33,34 @@
 ></script>
 <style>
 
-
 </style><script type="text/babel">
 function Cli(p) {
     //const [text, setText] = React.useState("");
     // single - the input is interpreted as a single string
-    // each - the input is interpreted as each word
+    // each - the input is interpreted as each word 
     // and sent in an array
     const [cliText, setCliText] = React.useState("enter cmd");
-    const [analysis, setAnalysis] = React.useState("");
+    const [analysis, setAnalysis] = React.useState("");  
 
     // submit entire text string for single analysis
     async function handleSubmit(e) {
         e.preventDefault();
-        const {data} =
+        const {data} = 
             await axios.get(
                 APIURL,
                 { cliString: "e.target.value" }
             );
-        //p.setTerminalText(JSON.stringify(data));
+        p.setTerminalText(JSON.stringify(data));
         setCliText("");
         return;
 
     }
-
+  
     function handleChange(e) {
             setCliText(e.target.value);
     }
 
-
+ 
     return (
         <div >
             <form onSubmit={handleSubmit}  >
@@ -89,7 +87,7 @@ function Terminal(props) {
 </head>
 <body>
 <script>
-const APIURL="http://localhost:6777/api"
+const APIURL="http://locahost:6777/api"
 </script>
 <div id='root'></div>
 <script type="text/babel">
@@ -100,8 +98,8 @@ const content=`
 function App() {
     const [termText, setTermText] = React.useState("out Default");
     return (
-        <div style={{margin:"2em"}}>
-            <h1 className="f4 bold mw5" >Dashboarded</h1>
+        <div> 
+            <h2>Dashboard</h2>
             <Cli setTermText={setTermText}  />
             <Terminal text={termText}/>
             <ReactMarkdown>{content}</ReactMarkdown>

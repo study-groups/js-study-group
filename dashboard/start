@@ -1,8 +1,7 @@
-# source this file in current shell
-kill $(cat pid)
+# HOST, PORT defined in build
 echo "$(date +%s): starting server on $HOST:$PORT"
-nodemon server/server.js 5556 localhost
+./watch
+nodemon server/server.js  $1 $2
 echo $! > pid
-
 # > log.txt &
 #tail -f log.txt

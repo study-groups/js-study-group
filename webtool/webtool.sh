@@ -14,7 +14,6 @@ webtool-build-hook(){
 
 webtool-python-server-start(){
   python3 -m http.server ${1:-8000} &
-  PS1="webtool-server> "
 }
 
 webtool-python-server-list(){
