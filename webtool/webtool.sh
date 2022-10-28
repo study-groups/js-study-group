@@ -14,7 +14,6 @@ webtool-build-hook(){
 
 webtool-python-server-start(){
   python3 -m http.server ${1:-8000} &
-  PS1="webtool-server> "
 }
 
 webtool-python-server-list(){
@@ -32,14 +31,16 @@ webtool-server-ip(){
 
 webtool-node-server() {
   local node_cmd="$(which node)"
-  local user_dir=$(eval ~)
+  local user_dir=$HOME
   local node_file="$user_dir/src/js-study-group/webtool/node-server.js"
   local port=${1:-"1234"}
-  local html_path="$user_dir/src/js-study-group/"
-  local json_dir="$user_dir/src/js-study-group/webtool/node-server.js"
-  local ip="$(webtool-server-ip)"
+  local html_dir=${3:-"$user_dir/src/js-study-group/webtool/html"};
+  local json_dir=${4:-"$user_dir/src/js-study-group/json"};
 
-  $node $node_file $port $html_path $json_path
+  #local ip="$(webtool-server-ip)"
+  local ip="127.0.0.1"
+
+ echo  $node $node_file $port $html_dir $json_dir  $ip
 }
 
 webtool-netcat-server(){
@@ -58,7 +59,6 @@ webtool-netcat-server(){
 
 webtool-server-start(){
   python3 -m http.server ${1:-8000} &
-  PS1="webtool-server> "
 }
 
 webtool-server-list(){
@@ -67,7 +67,6 @@ webtool-server-list(){
 
 webtool-server-stop-all(){
   kill $(ps aux | grep '[h]ttp.server' | awk '{print $2}')
-  PS1="webtool> "
 }
 
 webtool-server-ip(){

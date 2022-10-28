@@ -1,36 +1,33 @@
 <script type="text/babel">
-const API="http://localhost:5555/api"
-function Cli(props) {
-    const text=props.text;
-    const setText=props.setText;
+function Cli(p) {
     //const [text, setText] = React.useState("");
     // single - the input is interpreted as a single string
-    // each - the input is interpreted as each word 
+    // each - the input is interpreted as each word
     // and sent in an array
     const [cliText, setCliText] = React.useState("enter cmd");
-    const [analysis, setAnalysis] = React.useState("");  
+    const [analysis, setAnalysis] = React.useState("");
 
     // submit entire text string for single analysis
     async function handleSubmit(e) {
         e.preventDefault();
-        const {data} = 
+        const {data} =
             await axios.get(
-                API,
-                { data: text }
+                APIURL,
+                { cliString: "e.target.value" }
             );
-        setText(JSON.stringify(data));
+        //p.setTerminalText(JSON.stringify(data));
         setCliText("");
         return;
 
     }
-  
+
     function handleChange(e) {
             setCliText(e.target.value);
     }
 
- 
+
     return (
-        <div>
+        <div >
             <form onSubmit={handleSubmit}  >
                 <input  onChange={handleChange} type="text" value={cliText} />
                 <input type="submit" value="Analyze" />

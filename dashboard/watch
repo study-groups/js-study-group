@@ -2,6 +2,5 @@
 $(while inotifywait --exclude .swp -e modify -r client;
 do
     ./build-client;
-done;) &
-$(while inotifywait --exclude .swp -e modify -r server; do ./build-server; done;) &
+done;) 
 

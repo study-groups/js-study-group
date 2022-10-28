@@ -56,3 +56,8 @@ js-watch(){
   while inotifywait --exclude .swp -e modify -r $1; do ${@:2}; done;
 }
 
+js-keys-addall(){
+  eval "$(ssh-agent -s)"
+  ssh-add ~/.ssh/
+  ssh-add ~/.ssh/keys
+}

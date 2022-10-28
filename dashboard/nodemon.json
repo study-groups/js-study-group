@@ -4,9 +4,11 @@
     ".git", 
     "node_modules/**/node_modules"
   ],
+
+  "delay": "3000ms",
   "events": {
-    "restart": "./build-client"
+    "start": ""
   },
-  "ext": "html, js",
-  "delay": "500ms"
+
+  "ext": "html, js"
 }
