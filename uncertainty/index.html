@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!--
+ver001: uncertainty/index.html
+Single CSS + HTML Gabor wavelet
+-->
+<html>
+<head>
+    <title>Uncertainty principle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css"/>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.js"></script>
+
+</head>
+<body class="debugx debug-gridX bg-near-black washed-yellow">
+    <article class="w-50-ns flex center f5 "
+             style="flex-direction: column">
+
+        <h1 class="center">Uncertainty</h1>
+        <div class=" flex justify-center" >
+
+            <div class="bg-orange "
+                 style="width:50px; height:200px;"></div>
+
+            <div id="canvas-container"
+                style="width:200px; height:200px;
+                display: flex;
+                align-items: center;"
+                class="bg-dark-blue">
+
+                <div class="b--red ba tc"
+                    style="width:100%">
+                    Background
+                </div>
+            
+                <div id="debug" class="o-50  ba"
+                    style="position: absolute;">
+                    ver 001: center of canvas
+                </div>
+            </div> <!-- canavas-container -->
+        </div> <!-- flex items-start -->
+
+
+        <div class="flex ">
+            <div id="thumb" style="width:100px" class="h3" ></div>
+            <div id="pos" style="width:200px" class="h3" ></div>
+        </div>
+
+        <div class="w-100 flex flex-column" id="controls"> 
+            <input class="debug input-reset 
+                          bg-purple ma3 w-50 center "
+                   type="range" 
+                   id="yPos"  min="0" max="200" value="50">
+            <input class="input-reset w-50 mb3 pa0  bg-red center" 
+                    type="range"
+                    id="xPos"  min="0" max="200"value="50">
+        </div><!-- controls -->
+
+    </article>
+
+<div class="w-80 center mt4" id="Dev Notes">
+        http://tachyons.io/docs/layout/flexbox/
+    </div>
+</body>
+<script>
+const pi=Math.PI
+const sampFreq=8000
+function circle(x,y,size) {
+         this.beginPath()
+         this.arc(x,y,size ,0, 2*pi ,0);
+}
+
+function init(){
+    let ctx=document.querySelector("#pos > canvas")?.getContext('2d');
+    ctx.strokeStyle = "#FF0000";
+    ctx.strokeStyle = "#FF0000";
+    ctx.fillStyle = "#808";
+    ctx.circle=circle;
+    ctx.circle("20","20","20");
+   // ctx.sine("20","20","20");
+    ctx.stroke();
+
+    setup()
+} 
+
+
+function setup() {
+
+    let box = document.querySelector('#pos');
+    let width = box.offsetWidth;
+    let height = box.offsetHeight;
+
+    let canv = createCanvas(width-2,height-2 );
+    canv.parent('pos');
+    background(128,0,200);
+}
+
+function draw() {
+    let box = document.querySelector('#pos');
+    let width = box.offsetWidth;
+    let height = box.offsetHeight;
+    translate(0,height/2)
+    noFill()
+    beginShape()
+    let sigma = 60;
+    for (let i = 0; i < 359; i++){
+        let x = map (i, 0, 359, 0, width)
+        let y = .4*height*sin(20* 2* pi/360*i)
+        y = y*exp( -.5 * pow( (i-180)/sigma , 2 ) )
+        vertex(x,y)
+    }
+    endShape()
+}
+  
+window.onload = (event) => {
+   init()
+
+} 
+</script>
+</html>
