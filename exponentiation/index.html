@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<!--
+ver000: exponentiation/index.html
+Single CSS + HTML 
+-->
+<html>
+<head>
+    <title>Exponentiation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet"
+        href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css"/>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+</head>
+
+<body class="debugx debug-gridX bg-near-black washed-yellow">
+    <article class="w-60-ns flex center f5 "
+            style="flex-direction: column">
+
+        <h1 class="center">Exponentiation</h1>
+
+        <div class="flex h4-ns flex-column w-90 center flex-row-ns" >
+
+            <div    id="left"
+                 class="flex w-25-ns o-70 items-center  bg-orange "
+                style="">
+                 <p class="center">Left</p>
+            </div>
+
+            <div   id="canvas-container"
+                class="flex items-center w-50-ns bg-dark-gray"
+                style="">
+
+                <div id="equation" 
+                  class="f2 center items-center o-70"
+                  style="">
+                  <p>$$ b^{x}$$</p>
+                </div>
+            </div> <!-- canavas-container -->
+
+            <div id="right"
+              class="w-25-ns h-100 bg-navy flex items-center">
+                 <p class="center">Right</p>
+            </div>
+
+        </div> <!-- flex h4 ... -->
+    </article>
+
+    <div id="notes" 
+      class=" flex flex-column w-80  mt4 center ">
+
+        <h2 class="f4-ns mv4 tc tl-ns">Notes</h2>
+
+        <a href="https://www.ams.org/arc/styleguide/mit-2.pdf"
+           class="db mr-auto ml4 mb4 mb2-ns link dim blue">
+           Mathematics into type, By Ellen Swanson
+        </a>
+
+        <a href="https://www.youtube.com/watch?v=mvmuCPvRoWQ"
+           class="db mr-auto ml4 mb4 mb2-ns link dim blue">
+            Grant Sanderson on complex exponentiation
+        </a>
+
+        <a  href="https://tachyons.io/docs/elements/links/"
+           class="db mr-auto ml4 mb4 mb2-ns link dim blue">
+            Tachyons link syntax
+        </a>
+
+        <a href="https://docs.mathjax.org/en/latest/index.html"
+           class="db mr-auto ml4 mb4 mb2-ns link dim blue">
+           MathJax
+        </a>
+
+    </div>
+    <div id="footer" class="center mt4-ns tc bt b--orange o-60 pt2 w-80">
+        <a href="https://github.com/study-groups/js-study-group"
+           target="_blank"
+           class="ml4 mb4 mb2-ns link dim gray">
+          js-study-group
+        </a>
+    <div>
+</body>
+</html>
