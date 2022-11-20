@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!--
+ver000: horizon/index.html
+Single CSS + HTML 
+-->
+<html>
+<head>
+    <title>Horizon</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet"
+        href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css"/>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+</head>
+
+<body class="debugx debug-gridX bg-near-black washed-yellow o-90">
+    <article class="w-60-ns flex center f5 "
+            style="flex-direction: column">
+
+        <h1 class="center">Horizon</h1>
+
+        <div class="flex  flex-column w-90 center flex-row-ns" >
+
+            <div id="left"
+                 class="flex w-25-ns o-70 items-center  bg-orange "
+                style="">
+                 <p class="center">Left</p>
+            </div>
+
+            <div   id="canvas-container"
+                class="flex items-center w-50-ns bg-dark-gray"
+                style="">
+
+                <div id="horizon" 
+                  class="f2 center items-center o-90 flex"
+                  style="justify-center">
+
+                    <object type="image/svg+xml"
+                            id="horizon-svg"
+                            data="./horizon.svg"
+                            class="flex svg-object"
+                            style="width:100%; height:50%"
+                            >
+                          svg fallback <!-- put fallback image in CSS -->
+                    </object>
+
+                </div>
+            </div> <!-- canavas-container -->
+
+            <div id="right"
+              class="w-25-ns bg-navy flex items-center">
+                 <p class="center">Right</p>
+            </div>
+
+        </div> <!-- flex h4 ... -->
+
+    </article>
+
+    <div id="todo" 
+         class="center w-80 tc mt4 o-70"
+         style=""
+         >
+         <b>Next step</b>: generate SVG from JS
+    </div>
+
+    <div id="notes" 
+      class=" flex flex-column w-80  mt4 center ">
+        <h2 class="f4-ns mv4 tc tl-ns">Notes</h2>
+
+        <a href="https://www.w3.org/Graphics/SVG/IG/resources/svgprimer.html#SVG_web"
+           class="db mr-auto ml4 mb4 mb2-ns link dim blue">
+          W3 SVG Embedding Primer 
+        </a>
+
+        <a href="https://css-tricks.com/using-svg/"
+           class="db mr-auto ml4 mb4 mb2-ns link dim blue">
+          CSS-tricks on using SVG
+        </a>
+
+        <a  href="https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial#introducing_svg_from_scratch"
+           class="db mr-auto ml4 mb4 mb2-ns link dim blue">
+           MDN: Introducing SVG from Scratch 
+        </a>
+
+    </div>
+
+    <div id="footer" class="center mt4-ns tc bt b--orange o-60 pt2 w-80">
+        <a href="https://github.com/study-groups/js-study-group"
+           target="_blank"
+           class="ml4 mb4 mb2-ns link dim gray">
+          js-study-group
+        </a>
+    <div>
+</body>
+</html>
