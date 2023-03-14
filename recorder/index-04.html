@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Audio Recorder</title>
+    <style>
+      button {
+        margin: 10px;
+        padding: 5px 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: none;
+        background-color: #2196F3;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #0b7dda;
+      }
+
+      h1 {
+        margin: 20px;
+        font-size: 36px;
+        text-align: center;
+      }
+.error {
+  color: red;
+  font-weight: bold;
+  margin: 10px;
+}
+    </style>
+  </head>
+  <body>
+    <h1>Audio Recorder</h1>
+    <button id="startButton">Start Recording</button>
+    <button id="stopButton">Stop Recording</button>
+    <button id="downloadButton">Download Recording</button>
+    <audio id="audioPlayer" controls></audio>
+    <script>
+
+const startButton = document.getElementById('startButton');
+const stopButton = document.getElementById('stopButton');
+const downloadButton = document.getElementById('downloadButton');
+const audioPlayer = document.getElementById('audioPlayer');
+
+let mediaRecorder;
+let recordedChunks = [];
+
+startButton.addEventListener('click', startRecording);
+stopButton.addEventListener('click', stopRecording);
+downloadButton.addEventListener('click', downloadRecording);
+
+function startRecording() {
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+      try {
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/mpeg' });
+        mediaRecorder.start();
+        startButton.disabled = true;
+        stopButton.disabled = false;
+  
+        mediaRecorder.addEventListener('dataavailable', event => {
+          recordedChunks.push(event.data);
+        });
+      } catch (e) {
+        const errorContainer = document.createElement('div');
+        errorContainer.classList.add('error');
+        errorContainer.innerText = 'Error: ' + e.message;
+        document.body.appendChild(errorContainer);
+      }
+    });
+}
+
+function stopRecording() {
+  mediaRecorder.stop();
+  startButton.disabled = false;
+  stopButton.disabled = true;
+}
+
+function downloadRecording() {
+  const blob = new Blob(recordedChunks, { type: 'audio/wav; codecs=0' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'recording.wav';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+audioPlayer.addEventListener('play', stopRecording);
+
+
+   </script>
+  </body>
+</html>
+

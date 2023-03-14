@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Audio Recorder</title>
+    <style>
+      button {
+        margin: 10px;
+        padding: 5px 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: none;
+        background-color: #2196F3;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #0b7dda;
+      }
+
+      h1 {
+        margin: 20px;
+        font-size: 36px;
+        text-align: center;
+      }
+
+      .error {
+        color: red;
+        font-weight: bold;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Audio Recorder</h1>
+    <button id="startButton">Start Recording</button>
+    <button id="stopButton" disabled>Stop Recording</button>
+    <button id="downloadButton" disabled>Download Recording</button>
+    <audio id="audioPlayer" controls></audio>
+    <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+    <script>
+      const startButton = document.getElementById('startButton');
+      const stopButton = document.getElementById('stopButton');
+      const downloadButton = document.getElementById('downloadButton');
+      const audioPlayer = document.getElementById('audioPlayer');
+
+      let recorder;
+      let isRecording = false;
+
+      startButton.addEventListener('click', startRecording);
+      stopButton.addEventListener('click', stopRecording);
+      downloadButton.addEventListener('click', downloadRecording);
+
+      function startRecording() {
+        try {
+          navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+              const audioContext = new AudioContext();
+              const source = audioContext.createMediaStreamSource(stream);
+              const processor = audioContext.createScriptProcessor(4096, 1, 1);
+              recorder = new Recorder(source, {
+                numChannels: 1,
+                sampleRate: audioContext.sampleRate,
+                mimeType: 'audio/wav'
+              });
+              processor.onaudioprocess = event => {
+                if (isRecording) {
+                  recorder.record(event.inputBuffer.getChannelData(0));
+                }
+              };
+              source.connect(processor);
+              processor.connect(audioContext.destination);
+              isRecording = true;
+              startButton.disabled = true;
+              stopButton.disabled = false;
+              startButton.innerText = 'Currently Recording';
+            })
+            .catch(error => {
+              const errorContainer = document.createElement('div');
+              errorContainer.classList.add('error');
+              errorContainer.innerText = 'Error starting recording: ' + error.message;
+              document.body.appendChild(errorContainer);
+            });
+        } catch (e) {
+          const errorContainer = document.createElement('div');
+          errorContainer.classList.add('error');
+          errorContainer.innerText = 'Error starting recording: ' + e.message;
+          document.body.appendChild(errorContainer);
+        }
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          const errorContainer = document.createElement('div');
+          errorContainer.classList.add('error');
+          errorContainer.innerText = 'getUserMedia not supported in this browser';
+          document.body.appendChild(errorContainer);
+        }
+      }
+
+      function stopRecording() {
+        // TODO: implement this function
+      }
+
+      function downloadRecording() {
+        // TODO: implement this function
+      }
+    </script>
+  </body>
+</html>
