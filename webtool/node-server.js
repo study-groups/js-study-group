@@ -1,14 +1,12 @@
 const http = require("http");
 const fs = require("fs");
 const url = require("url");
-const { URL, URLSearchParams } = url;
 const { spawn } = require("child_process"); // neither used
 // https://nodejs.org/docs/latest/api/process.html#process_process_argv
-const PORT = process.argv[2]
-const HTML_PATH = process.argv[3]
-const JSON_DIR = process.argv[4]
-//const SERVER_IP = "0.0.0.0"; // catch all network interface
-const SERVER_IP = process.argv[5] || "127.0.0.1"; // localhost only
+const HTML_DIR = process.argv[2]
+const JSON_DIR = process.argv[3]
+const SERVER_IP = process.argv[4] || "127.0.0.1"; // localhost only
+const PORT = process.argv[5]
 
 const server = http.createServer( function(req, res) {
     // From https://nodejs.org/docs/guides/anatomy-of-an-http-transaction
@@ -18,19 +16,12 @@ const server = http.createServer( function(req, res) {
     // third forward slash.
 
     // The request object is an instance of IncomingMessage.
-
-    // IP:PORT/json?min=20&max=40
-    const baseUrl = `http://${SERVER_IP}:${PORT}`;
-    const parsedUrl = new URL(req.url, baseUrl);
-    const queryString = parsedUrl.search;
-    //console.log("query string:", queryString)
-
-    // path
-    const path = parsedUrl.pathname;
-    //const trimmedPath = path.replace(/^\/+|\/+$/g, "");
-
+    const parsedUrl = url.parse(req.url, true);
+    const queryObject = parsedUrl.query;
+    const urlPathname = url.parse(req.url, true).pathname;
+    console.log(queryObject)
     if (req.method === 'GET' && req.url === '/') {
-        fs.readFile(HTML_PATH, function(err, data) {
+        fs.readFile(`${HTML_DIR}/index.html`, function(err, data) {
             if (err) {
                 throw err;
             }
@@ -38,30 +29,19 @@ const server = http.createServer( function(req, res) {
         });
     }
     // /json?min=0&max=20
-    if (req.method === 'GET' && path === '/json') {
+    if (req.
+        method === 'GET' && urlPathname === '/json') {
+        const str = JSON.stringify(queryObject);
+
         res.writeHead(200, {"Content-Type": "application/json"});
-
-        // in future call spawn and get stdio from webtool-json-hook
-        // figure out how to specify which hook to use where
-        // "/json-hook" is currently located manually
-        // req vars passed to json-hook file
-
-        // random number generated between 1 and max
-        //const defaultMin = query.min || 0;
-        //const defaultMax = query.max || 20;
-        //const defaultMin = searchParams.get("min") || 0;
-        //const defaultMax = searchParams.get("max") || 20;
-        //const action = searchParams.get("action");
-
-        //console.log("parsedUrl.search: ", parsedUrl.search);
-        // works
-        //const pipeline = spawn(`${JSON_DIR}/json-hook`);
-        //console.log({parsedUrl}, {path}, {defaultMin}, {defaultMax});
         const pipeline = spawn(
-            `${JSON_DIR}/json-hook`,
+            `./json-hook`,
             [
-                queryString
-            ]
+               str
+            ],
+            {
+                cwd: JSON_DIR
+            }
         );
 
         //pipeline.stdout.on("data", function(data) {
@@ -69,7 +49,7 @@ const server = http.createServer( function(req, res) {
         //});
 
         pipeline.stderr.on("data",
-             (err) => console.error(Buffer.from(err).toString()));
+             (err) => console.error("Pipeline error", Buffer.from(err).toString()));
 
         pipeline.stdout.pipe(res); // pipes stdout of process to client
     }

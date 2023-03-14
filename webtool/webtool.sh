@@ -33,12 +33,10 @@ webtool-node-server() {
   local node_cmd="$(which node)"
   local user_dir=$HOME
   local node_file="$user_dir/src/js-study-group/webtool/node-server.js"
-  local port=${1:-"1234"}
-  local html_dir=${3:-"$user_dir/src/js-study-group/webtool/html"};
-  local json_dir=${4:-"$user_dir/src/js-study-group/json"};
-
-  #local ip="$(webtool-server-ip)"
-  local ip="127.0.0.1"
+  local html_dir=${1:-"$user_dir/src/js-study-group/webtool/html"};
+  local json_dir=${2:-"$user_dir/src/js-study-group/json"};
+  local ip=${3:-"127.0.0.1"}
+  local port=${4:-"1234"}
 
  echo  $node $node_file $port $html_dir $json_dir  $ip
 }

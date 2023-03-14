@@ -1,0 +1,17 @@
+#!/bin/zsh
+since="$(echo $1 | jq -r '.since // "year ago"'  )"  # -r: raw, no quotes
+before="$(echo $1 | jq -r '.before // "now"')"
+with="$(echo $1 | jq -r '.with // "all"' )"
+without="$(echo $1 | jq -r '.without // "none"' )"
+
+cat <<EOF
+With: $with
+Without: $without
+Before: $before
+Since: $since
+
+EOF
+
+source $HOME/src/fc/developer-environment/test-suite/tsd/tsd.sh
+TSD_ROOT="$HOME/src/fc/developer-environment/test-suite/playwright/results"
+tsd-find $since $before $with $without
