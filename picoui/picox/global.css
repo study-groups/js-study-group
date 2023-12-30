@@ -1,0 +1,99 @@
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden; /* Prevent scrolling */
+}
+
+header{
+    display:flex;
+    flex-direction:row;
+  }
+
+nav {
+    flex: 1;
+    padding:1em;
+}
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+nav ul li a.outline {
+    border: 1px solid;
+    padding: 5px 10px;
+    text-decoration: none;
+}
+
+main {
+    flex: 1 0 auto; /* Allow main to grow and shrink, but not to base its size on its children */
+    overflow: hidden; /* Hide any content that overflows */
+    z-index: 1; /* Set z-index lower than footer */
+}
+
+
+
+footer {
+    flex-shrink: 0; /* Prevent footer from shrinking */
+    z-index: 2; /* Set z-index higher than main */
+}
+
+
+/* Styles for screens wider than 600px */
+@media (min-width: 600px) {
+    nav ul {
+        display: flex;
+        justify-content: center;
+    }
+}
+nav ul li a span {
+    padding: 0 10px;
+}
+
+@media (max-width: 600px) {
+    nav ul {
+        display: none;
+    }
+
+    nav .hamburger {
+        display: block;
+    }
+}
+
+
+@media (min-width: 601px) {
+    nav ul {
+        display: flex;
+    }
+
+    nav .hamburger {
+        display: none;
+    }
+}
+
+.selected {
+    color: var(--highlight); /* Change the color to the highlight color defined in your palette */
+}
+
+[data-theme="dark"] {
+    --primary: #d81b60;
+    --primary-hover: #e91e63;
+    --primary-focus: rgba(216, 27, 96, 0.25);
+    --primary-inverse: #FFF;
+    --background: #333; /* Dark background */
+    --text-light: #FFF; /* Light text */
+  }

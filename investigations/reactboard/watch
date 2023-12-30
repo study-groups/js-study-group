@@ -1,0 +1,6 @@
+#!/bin/bash
+$(while inotifywait --exclude .swp -e modify -r client;
+do
+    ./build-client;
+done;) 
+

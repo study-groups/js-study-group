@@ -1,0 +1,41 @@
+<script type="text/babel">
+function Cli(p) {
+    //const [text, setText] = React.useState("");
+    // single - the input is interpreted as a single string
+    // each - the input is interpreted as each word
+    // and sent in an array
+    const [cliText, setCliText] = React.useState("enter cmd");
+    const [analysis, setAnalysis] = React.useState("");
+
+    // submit entire text string for single analysis
+    async function handleSubmit(e) {
+        e.preventDefault();
+        const {data} =
+            await axios.get(
+                APIURL,
+                { cliString: "e.target.value" }
+            );
+        //p.setTerminalText(JSON.stringify(data));
+        setCliText("");
+        return;
+
+    }
+
+    function handleChange(e) {
+            setCliText(e.target.value);
+    }
+
+
+    return (
+        <div >
+            <form onSubmit={handleSubmit}  >
+                <input  onChange={handleChange} type="text" value={cliText} />
+                <input type="submit" value="Analyze" />
+            </form>
+            <div>
+                {analysis}
+            </div>
+        </div>
+    );
+}
+</script>

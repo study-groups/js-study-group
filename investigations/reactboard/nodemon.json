@@ -1,0 +1,14 @@
+{
+  "watch": ["server", "client"],
+  "ignore": [ 
+    ".git", 
+    "node_modules/**/node_modules"
+  ],
+
+  "delay": "3000ms",
+  "events": {
+    "start": ""
+  },
+
+  "ext": "html, js"
+}
