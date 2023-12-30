@@ -4,25 +4,25 @@ class NavbarComponent {
         this.element = document.getElementById(elementId);
         this.app = app;
         this.element.querySelectorAll('ul li a').forEach(item => {
-            item.addEventListener('click', this.handleEventMode.bind(this));
+            item.addEventListener('click', this.handleClick.bind(this));
         });
     }
 
-    handleEventMode(event) {
+    handleClick(event) {
         const mode = event.target.getAttribute('data-mode');
-        console.log("handleEventMode");
+        picoDebug && console.log("handleEventMode");
         this.app.handleMode(mode);
         event.preventDefault();
     }
 
     update(state) {
         const mode = state.mode;
-        console.log("Navbar update mode is ", mode )
+        picoDebug && console.log("Navbar update mode is ", mode )
         this.element.querySelectorAll('ul li a').forEach(item => {
             item.classList.remove('active');
             if (item.getAttribute('data-mode') === mode) {
                 item.classList.add('active');
-                console.log("Found active mode ", mode )
+                picoDebug && console.log("Found active mode ", mode )
             }
         });
     }
@@ -35,15 +35,16 @@ class FooterComponent {
     }
 
     update(state) {
-        return;
-        false && console.log("FooterComponent::update(message)", state);
-        const lastThreePointers = state.pointers.slice(-3);
+        picoDebug && console.log("FooterComponent::update(message)", state);
+        const lastThreePointers = state.objects.slice(-3);
         let textContent = '';
         lastThreePointers.forEach(pointer => {
             const dataAsJson = JSON.stringify(pointer.data);
-            textContent += `ID: ${pointer.id}, Type: ${pointer.type}, Data: ${dataAsJson}\n`;
+            textContent += `<div>
+            ID: ${pointer.id}, Type: ${pointer.type}, Data: ${dataAsJson}
+            </div>`;
         });
-        this.element.textContent = textContent;
+        this.element.innerHTML = textContent;
         this.element.style.textAlign = 'center';
     }
 }
@@ -58,7 +59,7 @@ class InputComponent {
         }
 
         update(state) {
-            false && console.log("InputComponent::update(state)", state);
+            picoDebug && console.log("InputComponent::update(state)", state);
             this.element.textContent = state.mode;
             this.element.style.textAlign = 'center';
         }
@@ -132,12 +133,26 @@ class OutputComponent {
 
 class SettingsComponent {
     constructor(elementId, app) {
-            this.element = document.getElementById(elementId);
-            this.app = app;
+        this.element = document.getElementById(elementId);
+        this.app = app;
+        this.init(app.state);
+
+        this.element.addEventListener('change', (event) => {
+            if (event.target.matches('#loggingToggle')) {
+                this.app.handleLogging(event.target.checked);
+            }
+        });
+        this.element.addEventListener('click', (event) => {
+            if (event.target.matches('[data-theme-skin="techno"]')) {
+                event.preventDefault();
+                this.app.handleLoadTechnoStylesheet();
+                picoDebug && console.log("Techno theme selected");
+            }
+        });
     }
 
-    update(state) {
-            false && console.log("SettingsComponent::update(state)", state);
+    init(state) {
+            picoDebug && console.log("SettingsComponent::update(state)", state);
             this.element.innerHTML = `
             <div class="settingsComponent">
             <nav>
@@ -156,13 +171,21 @@ class SettingsComponent {
                 <details role="list">
                   <summary aria-haspopup="listbox">Examples (v1)</summary>
                   <ul role="listbox">
-                    <li><a href="../v1-preview/">Preview</a></li>
+                    <li><a href="../pico/v1-preview/">Preview</a></li>
                     <li><a href="../v1-bootstrap-grid/">Bootstrap grid</a></li>
+                    <li><a href="#" data-theme-skin="techno">Techno</a></li>
                   </ul>
                 </details>
               </li>
             </ul>
           </nav>
+            <div class="form-group">
+            <label>
+                <input type="checkbox" ${state.loggingEnabled ? 'checked' : ''} id="loggingToggle" />
+                Enable Logging
+            </label>
+            </div>
+
           </div>
             `;
             themeSwitcher.init();
@@ -201,7 +224,7 @@ class SettingsComponent {
                     //this.outputComponent.updateObj(state.objects[0]);
                     break;
                 case 'settings':
-                   this.settingsComponent.update(state);
+                  // this.settingsComponent.update(state);
                     break;
                 default:
                     break;

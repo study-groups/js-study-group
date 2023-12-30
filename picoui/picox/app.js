@@ -1,21 +1,18 @@
 class App {
     constructor() {
-        this.debug = false; // Set this to false to disable debugging
-        this.picox = new PicoX(this.debug);
-
+        this.picox = new PicoX();
         this.maxLogLines=10;
+        this.loggingReactionId=0;
         this.state = this.picox.observable({
             mode: 'default',
             objects: [],
-            // Other state properties...
         });
 
         themeSwitcher.init();
         this.initializeComponents();
-        console.log("Before this.state.mode", this.state.mode)
-        this.state.mode = picoState.loadState().mode;
-        console.log("After this.state.mode", this.state.mode)
-        console.log('Observable state:', this.state);
+
+        this.handleMode(picoState.loadState().mode);
+
         window.addEventListener('pointermove',
             this.handlePointerMove.bind(this));
     }
@@ -38,9 +35,36 @@ class App {
 
     }
 
+    handleLogging(loggingEnabled=false){
+        this.setState({ ...this.state, loggingEnabled: loggingEnabled });
+        if(loggingEnabled){
+            console.log("handleLogging: loggingOn", this.loggingReactionId)
+            this.loggingReactionId = this.picox.reaction(
+                () => this.state.curObj,
+                () => this.footer.update(this.state)
+            );
+         }
+         else{
+            console.log("handleLogging: loggingOFF", this.loggingReactionId);
+            this.picox.removeReaction(this.loggingReactionId);
+            this.footer.update({objects:[]});
+         }
+
+     }
+
+      handleLoadTechnoStylesheet() {
+        if (!document.getElementById('technoStylesheet')) {
+            const link = document.createElement('link');
+            link.id = 'technoStylesheet';
+            link.rel = 'stylesheet';
+            link.href = './techno.css'; // Replace with the actual path
+            document.head.appendChild(link);
+        }
+    }
 
     handleMode(mode) {
         this.setState({ ...this.state, mode: mode });
+        picoState.saveState(this.state);
         this.main.outputComponent.stopRendering();
         switch (mode) {
             case 'output':
@@ -52,7 +76,7 @@ class App {
                 this.main.switchTo(mode);
                 break;
             case 'settings':
-                this.main.settingsComponent.update(this.state);
+                this.main.settingsComponent.init(this.state);
                 this.main.switchTo(mode);
                 break;
             default:
@@ -75,7 +99,7 @@ class App {
     }
 
     setState(newState) {
-        this.debug && console.log('Setting state, old new:', this.state, newState);
+        picoDebug && console.log('Setting state, old new:', this.state, newState);
         Object.assign(this.state, newState);
     }
 

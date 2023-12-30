@@ -1,17 +1,19 @@
+//const picoDebug=(()=> true)();
+const picoDebug=false;
+
 class PicoX {
-    constructor(debug = false) {
-        this.debug = debug;
-        this.debugObservable=false;
+    constructor() {
         this.currentReaction = null;
         this.reactions = new Map();
+        this.reactionFunctions = new Map();
+
     }
 
     observable(obj) {
         const picox = this;
         return new Proxy(obj, {
             get(target, key) {
-                picox.debugObservable &&
-                    console.log(`Getting property ${key}`);
+                picoDebug && console.log(`Getting property ${key}`);
                 if (picox.currentReaction) {
                     if (!picox.reactions.has(key)) {
                         picox.reactions.set(key, new Set());
@@ -24,8 +26,7 @@ class PicoX {
                 if (target[key] === value) {
                     return true; // No value change, no need to trigger reactions
                 }
-                picox.debugObservable &&
-                    console.log(`Setting property ${key} to ${value}`);
+               picoDebug && console.log(`Setting property ${key} to ${value}`);
                 target[key] = value;
                 if (picox.reactions.has(key)) {
                     picox.reactions.get(key).forEach(reaction => reaction());
@@ -35,7 +36,28 @@ class PicoX {
         });
     }
 
+
     reaction(observableFn, reactionFn) {
+        this.currentReaction = reactionFn;
+        observableFn();
+        // Store the reaction function with a unique identifier
+        const reactionId = Date.now()
+        this.reactionFunctions.set(reactionId, reactionFn);
+        this.currentReaction = null;
+        return reactionId; // Return the identifier for later reference
+    }
+
+    removeReaction(reactionId) {
+        const reactionFn = this.reactionFunctions.get(reactionId);
+        if (reactionFn) {
+            this.reactions.forEach(reactionsSet => {
+                reactionsSet.delete(reactionFn);
+            });
+            this.reactionFunctions.delete(reactionId);
+        }
+    }
+
+    reactionOLD(observableFn, reactionFn) {
         this.currentReaction = reactionFn; // Set current reaction to the reaction function
         observableFn(); // Run observable function to register the reaction
         this.currentReaction = null; // Clear current reaction
