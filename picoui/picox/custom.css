@@ -1,3 +1,8 @@
+:root {
+    --row-height: 10vh;
+    --margin-width: 10vh;
+}
+
 .active {
     color: var(--primary); /* Primary color for text */
     border: 2px solid var(--primary); /* Solid border with primary color */
@@ -10,7 +15,6 @@
 .outputComponent {
     color: var(--primary); /* Primary color for text */
     border: 0px solid var(--secondary); /* Solid border with primary color */
-    padding: 0% 10% 0% 10%;
 }
 .settingsComponent {
     color: var(--primary); /* Primary color for text */
@@ -24,4 +28,35 @@
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+
+/* Set the viewport to device width and disable user scaling */
+
+/* CSS */
+body {
+    /* Set the body to full height and width */
+    height: 100vh;
+    width: 100vw;
+    /* Remove margins and padding */
+    margin: 0;
+    padding: 0;
+    /* Prevent overflow */
+    overflow: hidden;
+}
+
+.outputComponent article {
+    min-height: 40vh;
+    max-height: 40vh;
+    overflow: auto;
+    padding:.5rem 1rem .5rem 1rem;
+    margin:0vh var(--margin-width) 0vh var(--margin-width);
+}
+@media (max-width: 600px) {
+    .outputComponent article {
+        margin: 0;
+    }
+}
+
+nav{
+    height:10vh;
 }

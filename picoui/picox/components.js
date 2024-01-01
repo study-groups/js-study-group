@@ -1,39 +1,8 @@
-
-class NavbarComponent {
-    constructor(elementId, app) {
-        this.element = document.getElementById(elementId);
-        this.app = app;
-        this.element.querySelectorAll('ul li a').forEach(item => {
-            item.addEventListener('click', this.handleClick.bind(this));
-        });
-    }
-
-    handleClick(event) {
-        const mode = event.target.getAttribute('data-mode');
-        picoDebug && console.log("handleEventMode");
-        this.app.handleMode(mode);
-        event.preventDefault();
-    }
-
-    update(state) {
-        const mode = state.mode;
-        picoDebug && console.log("Navbar update mode is ", mode )
-        this.element.querySelectorAll('ul li a').forEach(item => {
-            item.classList.remove('active');
-            if (item.getAttribute('data-mode') === mode) {
-                item.classList.add('active');
-                picoDebug && console.log("Found active mode ", mode )
-            }
-        });
-    }
-}
-
 class FooterComponent {
     constructor(elementId, app) {
         this.element = document.getElementById(elementId);
         this.app = app;
     }
-
     update(state) {
         picoDebug && console.log("FooterComponent::update(message)", state);
         const lastThreePointers = state.objects.slice(-3);
@@ -66,134 +35,8 @@ class InputComponent {
 }
 
 
-class OutputComponent {
-    constructor(elementId, app) {
-        this.element = document.getElementById(elementId);
-        this.app = app;
-        this.limit = 10;
-        this.picoObjects = [];
-        this.isRendering = false;
-        this.lastRenderTime = performance.now();
-        this.frameCount = 0;
-        this.render = this.render.bind(this); // Bind once for performance
-    }
 
-    startRendering() {
-        if (!this.isRendering) {
-            this.isRendering = true;
-            this.then = performance.now();
-            requestAnimationFrame(this.render);
-        }
-    }
-
-    stopRendering() {
-        this.isRendering = false;
-    }
-
-    calculateFPS(now) {
-        this.frameCount++;
-        const deltaTime = now - this.lastRenderTime;
-        if (deltaTime > 1000) {
-            const fps = this.frameCount / (deltaTime / 1000);
-            console.log(`FPS: ${fps}`);
-            this.frameCount = 0;
-            this.lastRenderTime = now;
-        }
-    }
-
-    updateDOM(displayObjects) {
-        this.element.innerHTML = `<div class="outputComponent"><article></article></div>`; // Clear the existing content
-        const articleElement = this.element.querySelector('article');
-        displayObjects.forEach(obj => {
-            const newElement = document.createElement('div');
-            newElement.textContent = obj.data ? `dT: ${obj.delta}, Type: ${obj.type}, x: ${obj.data.x}, y: ${obj.data.y}` : `dT: ${obj.delta}, Type: ${obj.type}, x: undefined, y: undefined`;
-            articleElement.appendChild(newElement);
-        });
-    }
-
-    render(now) {
-        if (!this.isRendering) return;
-        this.calculateFPS(now);
-        const displayObjects = this.picoObjects.slice(-this.limit).map((obj, index, arr) => {
-            obj.delta = index === 0 ? 0 : obj.id - arr[index - 1].id;
-            return obj;
-        });
-        this.updateDOM(displayObjects);
-        requestAnimationFrame(this.render);
-    }
-
-    updateObj(picoObj) {
-        if (typeof picoObj !== 'object' || !picoObj.hasOwnProperty('id')) return;
-        this.picoObjects.push(JSON.parse(JSON.stringify(picoObj)));
-        if (this.picoObjects.length > this.limit) {
-            this.picoObjects.shift();
-        }
-    }
-}
-
-class SettingsComponent {
-    constructor(elementId, app) {
-        this.element = document.getElementById(elementId);
-        this.app = app;
-        this.init(app.state);
-
-        this.element.addEventListener('change', (event) => {
-            if (event.target.matches('#loggingToggle')) {
-                this.app.handleLogging(event.target.checked);
-            }
-        });
-        this.element.addEventListener('click', (event) => {
-            if (event.target.matches('[data-theme-skin="techno"]')) {
-                event.preventDefault();
-                this.app.handleLoadTechnoStylesheet();
-                picoDebug && console.log("Techno theme selected");
-            }
-        });
-    }
-
-    init(state) {
-            picoDebug && console.log("SettingsComponent::update(state)", state);
-            this.element.innerHTML = `
-            <div class="settingsComponent">
-            <nav>
-            <ul>
-              <li>
-                <details role="list">
-                  <summary aria-haspopup="listbox" role="button" class="secondary">Theme</summary>
-                  <ul role="listbox">
-                    <li><a href="#" data-theme-switcher="auto">Auto</a></li>
-                    <li><a href="#" data-theme-switcher="light">Light</a></li>
-                    <li><a href="#" data-theme-switcher="dark">Dark</a></li>
-                  </ul>
-                </details>
-              </li>
-              <li>
-                <details role="list">
-                  <summary aria-haspopup="listbox">Examples (v1)</summary>
-                  <ul role="listbox">
-                    <li><a href="../pico/v1-preview/">Preview</a></li>
-                    <li><a href="../v1-bootstrap-grid/">Bootstrap grid</a></li>
-                    <li><a href="#" data-theme-skin="techno">Techno</a></li>
-                  </ul>
-                </details>
-              </li>
-            </ul>
-          </nav>
-            <div class="form-group">
-            <label>
-                <input type="checkbox" ${state.loggingEnabled ? 'checked' : ''} id="loggingToggle" />
-                Enable Logging
-            </label>
-            </div>
-
-          </div>
-            `;
-            themeSwitcher.init();
-
-        }
-    }
-
-    class MainComponent {
+class MainComponent {
         constructor(elementId, app) {
             this.element = document.getElementById(elementId);
             this.app = app;
