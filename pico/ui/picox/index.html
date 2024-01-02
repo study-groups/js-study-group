@@ -1,0 +1,41 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+      <link rel="stylesheet" href="./custom.css" />
+      <title>Pico Header</title>
+  </head>
+  <body>
+     <nav class="  container-fluid" id="navbar">
+        <ul>
+          <li><strong>PicoUI</strong></li>
+        </ul>
+        <ul>
+          <li><a href="#" data-mode="input">Input</a></li>
+          <li><a href="#"  data-mode="output">Output</a></li>
+          <li><a href="#"  data-mode="settings">Settings</a></li>
+        </ul>
+      </nav>
+
+      <main id="main class="container">
+          <div id="default"></div>
+          <div id="input"></div>
+          <div id="output"></div>
+          <div id="settings"></div>
+      </main>
+      <footer id="footer">
+      </footer>
+
+      <script src="./theme.js"></script>
+      <script src="./state.js"></script>
+      <script src="./picox.js"></script>
+      <script src="./navComponent.js"></script>
+      <script src="./outputComponent.js"></script>
+      <script src="./settingsComponent.js"></script>
+      <script src="./components.js"></script>
+      <script src="./app.js"></script>
+  </body>
+  </html>

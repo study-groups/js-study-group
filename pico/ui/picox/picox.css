@@ -1,0 +1,19 @@
+body {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#navbar ul li a {
+  border-style: none; /* You can change this to any valid border style */
+}
+
+#navbar ul li a.active {
+  font-weight:bold;
+  border: 1.4 px solid var(--border-color);
+  border-radius: 5px;
+}
+

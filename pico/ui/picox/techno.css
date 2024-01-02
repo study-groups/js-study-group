@@ -1,0 +1,29 @@
+.active {
+    color: yellow; /* Primary color for text */
+    border: 2px solid yellow; /* Solid border with primary color */
+    padding: var(--nav-link-spacing-vertical) var(--nav-link-spacing-horizontal); /* Padding for better visual */
+    border-radius: var(--border-radius); /* Rounded corners */
+    text-decoration: none; /* Removes underline */
+    background-color: transparent; /* Transparent background */
+}
+
+.outputComponent {
+    color: var(--primary); /* Primary color for text */
+    border: 0px solid var(--secondary); /* Solid border with primary color */
+    padding: 0% 10% 0% 10%;
+}
+.settingsComponent {
+    color: var(--primary); /* Primary color for text */
+    border: 0px solid var(--secondary); /* Solid border with primary color */
+    padding: 0 20% 0 20%;
+}
+
+.footerComponent {
+    height:5rem;
+    padding:0;
+    margin:0;
+    font-size:small;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
