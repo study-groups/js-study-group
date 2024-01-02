@@ -1,0 +1,33 @@
+Let's build PicoDb, a time-series, object orientend with functional
+user semantics (map, reduce, etc) that is reactive and provides
+support for automatically vectorizing the msg field which is
+always considered text.
+
+Use a minimal amount of third party code but assume we have npm
+installed.
+
+use picodb.sh to capture Bash functions for generating
+file structures and example data. We want someone to be able
+to git clone, cd into picodb and get started by source picodb.sh
+
+to start, write picodb_create() that creates a server that
+uses port PICODB_PORT=5100 and serves from 0.0.0.0 so
+machines on a local network can see. Provide GET/examples
+
+{
+    id: 1704094517              //
+    type: csvv; /* comma separated var,val */
+    msg: x=222, y=333;
+}
+
+{
+    id: 1704094517123456000       // date +%s%N
+    type: domId.csvv; /* comma msg var,val */
+    msg: domId, x=222, y=333;
+}
+
+{
+    id:1704094517001            // Date.now() in JS
+    type: domId.str;            // interpret msg as string
+    msg: domId, "x=222, y=333";
+}

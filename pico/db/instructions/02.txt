@@ -1,0 +1,15 @@
+Add a bash function to /bgf/tools.sh
+that replaces a bash function supplied from stdin
+
+Add a BGF that produces a unit test framework
+used to document and test Pico Object Types
+
+Create BGFs that would be useful for the developer
+
+Instead of functions, just put the function in
+a file name that suggests what it does and
+assume it will be sourced by the user but
+also assume the following env variables
+are set in dev.env
+PORT=5001
+IP=0.0.0.0
