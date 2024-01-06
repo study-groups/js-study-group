@@ -1,5 +1,5 @@
 #!/bin/bash
-# file: fifomq.sh
+# file: picomq.sh
 # A message queue relying on Linux process control (Kafka-esque)
 # and relying on fifos with processing loops (Spark-like)
 
@@ -24,28 +24,6 @@ read_pico_object() {
     read -r type < "$fifo"
     read -r msg < "$fifo"
     read -r data < "$fifo"
-}
-
-fmq_create(){
-  mkdir picoGen
-  mkdir picoMeasure
-  mkdir picoTerm
-}
-
-fmq_destroy(){
-  rm -r picoGen
-  rm -r picoMeasure
-  rm -r picoTerm
-}
-
-
-# Initialize FIFO and control flags
-fmq_init() {
-    for dir in pico*/; do
-        mkfifo "$dir/in_pipe"
-        mkfifo "$dir/out_pipe"
-        echo "off" > "$dir/onflag"
-    done
 }
 
 # Process for measuring data
@@ -75,12 +53,18 @@ picoTerm() {
 
 # Data generation process
 picoGen() {
-    newObj=$(build_pico_object "$(date +%s%3N)" "$BASHPID" "domid" "pt-generate" "msg" "$@")
+    newObj=$(build_pico_object \
+        "$(date +%s%3N)" \
+         "$BASHPID" \
+         "domid" \
+         "pt-generate" \
+         "msg" \
+         "$@")
+
     echo -e "$newObj"
 }
 
-# Continuous data generation with delay
-continuousPicoGen() {
+picoGenContinuous() {
     local sleep_delay="$1"; shift
     while [ "$(cat picoGen/onflag)" = "on" ]; do
         picoGen "$@" > picoGen/out_pipe
@@ -89,20 +73,20 @@ continuousPicoGen() {
 }
 
 # Forward packets from Gen to Term
-runPackets() {
+picoRun() {
     while read -r line < picoGen/out_pipe; do
         echo "$line" > picoTerm/in_pipe
     done
 }
 
 # Cleanup function to stop all subprocesses
-cleanup() {
+picoCleanupSigInt() {
     echo "Stopping all subprocesses..."
     kill -- -$$  # Send SIGTERM to the process group
 }
 
 # Trap SIGINT to run cleanup function
-trap cleanup SIGINT
+trap picoCleanupSigInt SIGINT
 
 # Main setup and run function
 setupAndRun() {
