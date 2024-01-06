@@ -1,0 +1,51 @@
+/* Styles for the maze grid
+.maze-grid {
+    display: grid;
+    border: 1px solid #333;
+    background-color: #f8f8f8;
+}
+
+/* Automatically generate grid based on the number of cells */
+.maze-grid-row {
+    display: contents;
+}
+
+/* Styles for each cell in the maze */
+.maze-cell {
+    border-top: 1px solid #333;
+    border-right: 1px solid #333;
+    width: 20px;   /* Adjust cell size as needed */
+    height: 20px;
+    box-sizing: border-box;
+}
+
+*/
+/* Remove border to visually "break down" walls */
+.maze-cell.no-top-wall {
+    border-top: none;
+}
+
+.maze-cell.no-right-wall {
+    border-right: none;
+}
+
+
+/* Styles for the overall maze grid */
+.maze-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20px, 1fr));
+    gap: 1px;
+    border: 1px solid #333; /* Optional: for overall grid border */
+    background-color: #f8f8f8;
+}
+
+/* Styles for each cell in the maze */
+.maze-cell {
+    width: 20px;   /* Adjust cell size as needed */
+    height: 20px;
+    border: 1px solid #333;
+    box-sizing: border-box;
+}
+
+/* Additional styling as needed */
+

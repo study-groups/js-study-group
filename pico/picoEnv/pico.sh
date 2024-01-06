@@ -85,9 +85,6 @@ pico_generate_page() {
     pico_generate_footer
 }
 
-#!/bin/bash
-
-
 _pico_generate_css() {
     cat <<EOF
 /* CSS variables for colors */
@@ -157,6 +154,3 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 EOF
 }
-
-
-

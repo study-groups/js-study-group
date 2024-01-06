@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Responsive Flexbox Grid with Square Cells</title>
+    <style>
+        body {
+            display: flex;
+                flex-direction: column;
+
+            justify-content: center; /* Center the content horizontally */
+            height: 100vh; /* Full viewport height */
+            align-items: center; /* Center the content vertically */
+        }
+        .grid-row {
+            display: flex;
+        }
+        .grid-cell {
+            box-sizing: border-box;
+            width: calc(100% / 32); /* Width relative to the container */
+            position: relative;
+        }
+        .grid-cell::before {
+            content: '';
+            display: block;
+            padding-top: 100%; /* Maintains the 1:1 aspect ratio */
+        }
+        .grid-cell-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-color: yellow;
+            box-sizing: border-box;
+        }
+        #grid-container {
+            width: 60%; /* Width is 50% of the viewport */
+            max-width: 640px; /* Maximum width can be adjusted as needed */
+        }
+    </style>
+</head>
+<body>
+    <div id="grid-container"></div>
+    Footer
+    <script>
+        function createGrid(rows, cols) {
+            const grid = [];
+            for (let i = 0; i < rows; i++) {
+                const row = [];
+                for (let j = 0; j < cols; j++) {
+                    row.push({ color: 'white', border: '.5px solid gray' }); 
+                }
+                grid.push(row);
+            }
+            return grid;
+        }
+
+        function createGridUI(grid) {
+            const gridContainer = document.createElement('div');
+            grid.forEach(row => {
+                const rowElement = document.createElement('div');
+                rowElement.classList.add('grid-row');
+                row.forEach(cell => {
+                    const cellElement = document.createElement('div');
+                    cellElement.classList.add('grid-cell');
+                    
+                    const contentElement = document.createElement('div');
+                    contentElement.classList.add('grid-cell-content');
+                    contentElement.style.backgroundColor = cell.color;
+                    contentElement.style.border = cell.border;
+
+                    cellElement.appendChild(contentElement);
+                    rowElement.appendChild(cellElement);
+                });
+                gridContainer.appendChild(rowElement);
+            });
+            return gridContainer;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const gridMatrix = createGrid(32, 32);
+            const gridUI = createGridUI(gridMatrix);
+            document.getElementById('grid-container').appendChild(gridUI);
+        });
+    </script>
+</body>
+</html>

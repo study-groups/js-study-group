@@ -1,0 +1,10 @@
+We are creating a cli program consisting of a collection of bash
+ functions. We assume the user will source nectar.sh and nectar.sh
+will source additional .sh files full of functions that 
+adhere to the naming conventions nectar_topic_subtopic
+and nectar_topic_subtopic would be found in ./topic.sh and 
+nextar.sh would source colocated .sh files.
+
+Begin by making nextar.sh and netar_help() which describes 
+nectar are a data collection and processing system that 
+runs in a terminal on the commandline.
