@@ -1,4 +1,5 @@
-WEBSOCKET_CMD=$PWD/websocketd
+#WEBSOCKET_CMD=$PWD/websocketd
+WEBSOCKET_CMD=websocketd
 export WS_PORT=9200
 export WS_HOST=js.study-groups.org
 export WS_APP=default
