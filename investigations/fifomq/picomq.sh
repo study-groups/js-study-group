@@ -29,11 +29,18 @@ read_pico_object() {
 # Process for measuring data
 picoMeasure() {
     while [ "$(cat picoMeasure/onflag)" = "on" ]; do
-        if read -r line < picoMeasure/in_pipe; then
-            read_pico_object picoMeasure/in_pipe
-            sum=$(echo "$data" | awk -F, '{ for (i=1; i<=NF; i++) sum+=$i } END { print sum }')
-            newObj=$(build_pico_object "$(date +%s%3N)" "$BASHPID" "$domid" "pt-measure" "$msg" "$sum")
-            echo -e "$newObj" > picoMeasure/out_pipe
+        if read -r line < picoMeasure/in; then
+            read_pico_object picoMeasure/in
+            sum=$(echo "$data" | \
+                 awk -F, '{ for (i=1; i<=NF; i++) sum+=$i } END { print sum }')
+            newObj=$(build_pico_object 
+             "$(date +%s%3N)"
+             "$BASHPID"
+             "$domid" 
+             "pt-measure"
+             "$msg"
+             "$sum")
+            echo -e "$newObj" > picoMeasure/out
         fi
     done
 }
@@ -41,7 +48,7 @@ picoMeasure() {
 # Terminal process
 picoTerm() {
     trap "echo 'Terminating picoTerm'; exit" SIGINT SIGTERM
-    exec 3< picoTerm/in_pipe
+    exec 3< picoTerm/in
     while true; do
         if read -t 0.1 -u 3 line; then
             [[ "$line" == "q" ]] && break
@@ -67,15 +74,15 @@ picoGen() {
 picoGenContinuous() {
     local sleep_delay="$1"; shift
     while [ "$(cat picoGen/onflag)" = "on" ]; do
-        picoGen "$@" > picoGen/out_pipe
+        picoGen "$@" > picoGen/out
         sleep "$sleep_delay"
     done
 }
 
 # Forward packets from Gen to Term
 picoRun() {
-    while read -r line < picoGen/out_pipe; do
-        echo "$line" > picoTerm/in_pipe
+    while read -r line < picoGen/out; do
+        echo "$line" > picoTerm/in
     done
 }
 
@@ -92,7 +99,7 @@ trap picoCleanupSigInt SIGINT
 setupAndRun() {
     picoInit
     echo "on" > picoGen/onflag
-    (continuousPicoGen .1 & runPackets) &
+    (continuousPicoGen .1 & picoRun) &
     picoTerm
     wait
     echo "Main process exiting."
