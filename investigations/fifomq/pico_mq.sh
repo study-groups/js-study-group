@@ -1,7 +1,20 @@
 #!/bin/bash
+
 # file: picomq.sh
 # A message queue relying on Linux process control (Kafka-esque)
 # and relying on fifos with processing loops (Spark-like)
+
+pico_mq_create(){
+  mkdir picoGen
+  mkdir picoMeasure
+  mkdir picoTerm
+}
+
+pico_mq_destroy(){
+  rm -r picoGen
+  rm -r picoMeasure
+  rm -r picoTerm
+}
 
 # Function to build a Pico Object
 build_pico_object() {
@@ -92,11 +105,10 @@ picoCleanupSigInt() {
     kill -- -$$  # Send SIGTERM to the process group
 }
 
-# Trap SIGINT to run cleanup function
-trap picoCleanupSigInt SIGINT
-
 # Main setup and run function
-setupAndRun() {
+picoSetupAndRun() {
+    # Trap SIGINT to run cleanup function
+    trap picoCleanupSigInt SIGINT
     picoInit
     echo "on" > picoGen/onflag
     (continuousPicoGen .1 & picoRun) &
