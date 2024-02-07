@@ -69,7 +69,7 @@ class SettingsComponent {
                 <details role="list">
                   <summary aria-haspopup="listbox">Skins</summary>
                   <ul role="listbox">
-                    <li><a href="../pico/v1-preview/">Preview</a></li>
+                    <li><a href="./pico-css/v1-preview/">Preview</a></li>
                     <li><a href="../v1-bootstrap-grid/">Bootstrap grid</a></li>
                     <li><a href="#" data-theme-skin="techno">Techno</a></li>
                   </ul>
