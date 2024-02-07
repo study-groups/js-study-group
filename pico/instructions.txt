@@ -1,0 +1,108 @@
+### PicoObject Definition
+
+A `PicoObject` is a structured data representation that serves as both a data entity and a message in a messaging system. Each `PicoObject` consists of the following fields:
+
+1. **id (picoflake)**: A unique identifier for the PicoObject, generated based on the current timestamp with nanosecond precision: `$(date +%s%6N)`. This ensures that each PicoObject has a unique identifier and can be traced or referred to uniquely in the system.
+
+2. **pid (parent picoflake)**: The picoflake of the parent PicoObject. This establishes a hierarchical or relational linkage between PicoObjects, allowing the system to understand the lineage or context of messages.
+
+3. **topic**: A string representing the topic or category to which the PicoObject belongs. This is used for routing and filtering messages in the messaging system.
+
+4. **type**: A string indicating the type of data or the schema that the `data` field adheres to. This helps consumers understand how to parse and process the data.
+
+5. **data**: The actual content or payload of the PicoObject. This can be a string, structured text, or even a serialized JSON object, depending on the `type`.
+
+6. **meta**: A field for any metadata associated with the PicoObject, such as timestamps, tags, or any other ancillary information that helps in processing or categorizing the PicoObject.
+
+### Representation Formats
+
+A `PicoObject` can be represented in one of three ways:
+
+1. **Single Line (raw or tsb)**: All fields are presented in a single line with tab-separated values.
+   ```
+   id\ttopic\ttype\tdata\tmeta
+   ```
+
+2. **Stanza (text-based)**: Each field is presented on a new line, and PicoObjects are separated by a blank line.
+   ```
+   id: value
+   pid: value
+   topic: value
+   type: value
+   data: value
+   meta: value
+   
+   ```
+
+3. **JSON**: A standard JSON object with each field as a key-value pair.
+   ```json
+   {
+     "id": "value",
+     "pid": "value",
+     "topic": "value",
+     "type": "value",
+     "data": "value",
+     "meta": "value"
+   }
+   ```
+
+### Message Storage and Notification System
+
+Messages (PicoObjects) are stored in named pipes (FIFOs) on the Linux filesystem, and a notification system based on `inotify` is used to send messages to subscribed consumers.
+
+#### Bash Functions
+
+1. **Create PicoObject Pipe**:
+   ```bash
+   create_pico_pipe() {
+       mkfifo "/path/to/pipes/$1"
+   }
+   ```
+
+2. **Write to PicoObject Pipe**:
+   ```bash
+   write_pico_object() {
+       echo "$2" > "/path/to/pipes/$1"
+   }
+   ```
+
+3. **Read and Process PicoObject Pipe**:
+   ```bash
+   process_pico_pipe() {
+       inotifywait -m "/path/to/pipes/$1" | while read pipe; do
+           if read line <"/path/to/pipes/$1"; then
+               process_pico_object "$line"
+           fi
+       done
+   }
+   ```
+
+4. **Process PicoObject** (Placeholder for actual processing logic):
+   ```bash
+   process_pico_object() {
+       # Process the PicoObject (parse, route, etc.)
+       echo "Processing PicoObject: $1"
+   }
+   ```
+
+#### File-based Subscription Scheme
+
+For a file-based subscription scheme, each topic could have its own pipe, and consumers would subscribe by listening to the pipe of the topic they are interested in.
+
+1. **Subscribe to Topic**:
+   ```bash
+   subscribe_to_topic() {
+       process_pico_pipe "$1" &
+   }
+   ```
+
+2. **Publish to Topic**:
+   ```bash
+   publish_to_topic() {
+       write_pico_object "$1" "$2"
+   }
+   ```
+
+In this scheme, `write_pico_object` writes a new PicoObject to the named pipe corresponding to the topic, and `process_pico_pipe` sets up a subscription to that pipe, processing incoming PicoObjects in real-time.
+
+This architecture allows for real-time, topic-based messaging with a simple, filesystem-based backend, suitable for systems where the full overhead of a traditional message broker is not necessary or desired.
