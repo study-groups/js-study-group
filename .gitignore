@@ -2,6 +2,7 @@ dashboard/client/out
 dashboard/client/public/
 dashboard/client/tachyons.min.css
 
+.parcel-cache
 .qik
 
 *.nginx
