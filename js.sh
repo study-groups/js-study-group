@@ -26,6 +26,7 @@ js-nvm-install-help(){
 EOF
 
 }
+
 js-nvm-start(){
   if [ -z "$js_ps1_orig" ]; then  # grab original first time and use it
     js_ps1_orig="$PS1"
