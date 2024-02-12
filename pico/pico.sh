@@ -13,9 +13,15 @@ PICO_ROOT=$PICO_ROOT
 EOF
 }
 
+pico_watch_parcel(){
+    echo "Watching picoUi with Parcel..."
+    parcel watch $1 $PICO_ROOT/picoUi/picox/index.html \
+        --dist-dir $PICO_ROOT/picoUi/picox/dist
+}
+
 pico_build_parcel(){
     echo "Bundling picoUi with Parcel..."
-    parcel build $PICO_ROOT/picoUi/picox/index.html \
+    parcel build $1 $PICO_ROOT/picoUi/picox/index.html \
         --dist-dir $PICO_ROOT/picoUi/picox/dist
         
     if [ $? -eq 0 ]; then
@@ -25,6 +31,10 @@ pico_build_parcel(){
     fi
 }
 
+pico_serve_picox(){
+    echo "Serving picoUi with Python..."
+    python -m http.server -d $PICO_ROOT/picoUi/picox/dist
+} 
 pico_build_go(){(
     echo "Building picoGo..." > /dev/stderr
     cd $PICO_ROOT/picoGo
