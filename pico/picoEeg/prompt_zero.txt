@@ -1,0 +1,20 @@
+PicoEeg is an four channel electroencephalogram simulator.
+It is written in C++ with a ninja style build system.
+It is based around CCRMA's Synthesis Toolkit Library.
+It loops over reading stdin and is controlled in realtime.
+Each line of input is a "Pico Object".
+<IntegerDateInMicroseconds> TYPE Data
+PicoEeg has the following states
+IDLE
+RUNNING
+There are 4 geneartors each of which can be panned L-R
+The EEG signal on each of the four channels is actually a sine wave generator.
+Each channel has frequency amplitude and phase, %L and %R
+Each channel should be controlled by an OSC syntax
+Therefore, the input should look like this when controlling generators
+<IntegerDateInMicroseconds> OSC /gen1/freq/82.5/hz
+The app should use non-blocking callbacks.
+All four channels should be mapped a stereo output
+A kalman filter or easing function should change values from curent to target
+Use OSC syntax from standard input at startup to configure audio
+Default to 48000 sampling rate.
